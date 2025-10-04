@@ -176,7 +176,7 @@ export function WorkoutModal({
                 onClick={() => setShowAddExercise(true)}
                 className="flex items-center space-x-2"
               >
-                <MdAdd className="text-white" />
+                <MdAdd className="text-black" />
                 <span>Add Exercise</span>
               </Button>
             </div>

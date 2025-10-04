@@ -151,7 +151,7 @@ export function AddExerciseForm({ onAdd, onCancel }: AddExerciseFormProps) {
             Cancel
           </Button>
           <Button type="submit" className="flex items-center space-x-2">
-            <MdAdd className="w-4 h-4" />
+            <MdAdd className="w-4 h-4 text-black" />
             <span>Add Exercise</span>
           </Button>
         </div>

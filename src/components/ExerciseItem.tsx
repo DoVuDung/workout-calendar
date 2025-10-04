@@ -230,7 +230,7 @@ export function ExerciseItem({
             size="icon"
             onClick={() => onDelete(exercise.id)}
           >
-            <MdDelete className="w-4 h-4" />
+            <MdDelete className="w-4 h-4 text-red-600" />
           </Button>
         </div>
       </div>

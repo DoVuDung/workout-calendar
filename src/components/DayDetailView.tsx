@@ -188,7 +188,7 @@ export function DayDetailView({
                   className="w-full h-12 border-dashed border-2 border-blue-500 hover:border-blue-600 text-blue-600"
                   onClick={() => setShowAddExercise(true)}
                 >
-                  <MdAdd className="w-4 h-4 mr-2" />
+                  <MdAdd className="w-4 h-4 mr-2 text-black" />
                   Add Exercise
                 </Button>
               )}
@@ -204,7 +204,7 @@ export function DayDetailView({
             <h3 className="text-lg font-medium mb-2">No workout planned</h3>
             <p className="text-[13px] mb-4">Add a workout to get started</p>
             <Button className="bg-blue-600 hover:bg-blue-700">
-              <MdAdd className="w-4 h-4 mr-2" />
+              <MdAdd className="w-4 h-4 mr-2 text-white" />
               Add Workout
             </Button>
           </div>
