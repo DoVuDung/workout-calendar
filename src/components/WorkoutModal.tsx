@@ -10,12 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { MdClose, MdAdd } from 'react-icons/md';
+import { MdClose, MdAdd, MdDelete } from 'react-icons/md';
 
 interface WorkoutModalProps {
   workout: Workout;
   onClose: () => void;
   onUpdate: (workout: Workout) => void;
+  onDelete: (workoutId: string) => void;
   onExerciseDrop: (activeExerciseId: string, overExerciseId: string) => void;
 }
 
@@ -23,6 +24,7 @@ export function WorkoutModal({
   workout,
   onClose,
   onUpdate,
+  onDelete,
   onExerciseDrop,
 }: WorkoutModalProps) {
   const [editedWorkout, setEditedWorkout] = useState<Workout>(workout);
@@ -108,9 +110,24 @@ export function WorkoutModal({
               {workout.difficulty}
             </span>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <MdClose className="w-5 h-5" />
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => {
+                if (confirm('Are you sure you want to delete this workout?')) {
+                  onDelete(workout.id);
+                  onClose();
+                }
+              }}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              <MdDelete className="w-5 h-5" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <MdClose className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
 
         {/* Content */}

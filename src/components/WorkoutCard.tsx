@@ -40,7 +40,7 @@ export function WorkoutCard({ workout, onClick }: WorkoutCardProps) {
     <div
       ref={drag as any}
       className={`
-        bg-[#F3F5F8] rounded-lg p-3 cursor-pointer transition-all duration-200 mb-3 border border-[#22242626]
+        bg-white rounded-lg p-3 cursor-pointer transition-all duration-200 mb-3 border border-[#22242626]
         ${isDragging ? 'opacity-50 scale-105 shadow-lg' : 'hover:shadow-md'}
       `}
       onClick={onClick}
@@ -86,7 +86,7 @@ export function WorkoutCard({ workout, onClick }: WorkoutCardProps) {
             variant="ghost"
             className="rounded-full w-6 h-6 bg-gray-300 hover:bg-gray-400 p-0"
           >
-            <MdAdd className="w-3 h-3 text-gray-600" />
+            <MdAdd className="w-3 h-3 text-white" />
           </Button>
         </div>
       </div>

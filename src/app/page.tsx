@@ -11,6 +11,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 export default function Home() {
   const [calendarData, setCalendarData] = useState<Day[]>([]);
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
+  const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -125,19 +126,31 @@ export default function Home() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedWorkout(null);
+    setSelectedDayId(null);
   };
 
   const handleUpdateWorkout = (updatedWorkout: Workout) => {
     setCalendarData(prevData => {
       const newData = [...prevData];
+      let workoutFound = false;
 
+      // First, try to find and update existing workout
       for (const day of newData) {
         const workoutIndex = day.workouts.findIndex(
           w => w.id === updatedWorkout.id
         );
         if (workoutIndex !== -1) {
           day.workouts[workoutIndex] = updatedWorkout;
+          workoutFound = true;
           break;
+        }
+      }
+
+      // If workout not found, it's a new workout that needs to be added
+      if (!workoutFound && selectedDayId) {
+        const dayIndex = newData.findIndex(day => day.date === selectedDayId);
+        if (dayIndex !== -1) {
+          newData[dayIndex].workouts.push(updatedWorkout);
         }
       }
 
@@ -147,9 +160,25 @@ export default function Home() {
     handleCloseModal();
   };
 
+  const handleDeleteWorkout = (workoutId: string) => {
+    setCalendarData(prevData => {
+      const newData = [...prevData];
+
+      for (const day of newData) {
+        const workoutIndex = day.workouts.findIndex(w => w.id === workoutId);
+        if (workoutIndex !== -1) {
+          day.workouts.splice(workoutIndex, 1);
+          break;
+        }
+      }
+
+      return newData;
+    });
+  };
+
   const handleAddWorkout = (dayId: string) => {
     const newWorkout: Workout = {
-      id: `workout-${Date.now()}`,
+      id: `workout-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       name: 'New Workout',
       exercises: [],
       duration: 60,
@@ -157,18 +186,10 @@ export default function Home() {
       color: '#5A57CB',
     };
 
-    setCalendarData(prevData => {
-      const newData = [...prevData];
-      const dayIndex = newData.findIndex(day => day.date === dayId);
-      
-      if (dayIndex !== -1) {
-        newData[dayIndex].workouts.push(newWorkout);
-      }
-      
-      return newData;
-    });
-
-    // Open the modal for the new workout
+    // Store the day ID for when the workout is saved
+    setSelectedDayId(dayId);
+    
+    // Open the modal for the new workout without adding it to calendar yet
     setSelectedWorkout(newWorkout);
     setIsModalOpen(true);
   };
@@ -223,6 +244,7 @@ export default function Home() {
             workout={selectedWorkout}
             onClose={handleCloseModal}
             onUpdate={handleUpdateWorkout}
+            onDelete={handleDeleteWorkout}
             onExerciseDrop={handleExerciseDrop}
           />
         )}
