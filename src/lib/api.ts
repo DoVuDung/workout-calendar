@@ -80,6 +80,11 @@ class ApiClient {
     if (day && day.workouts.length >= MAX_WORKOUTS_PER_DAY) {
       throw new Error(`Day ${dayDate} is full. Maximum ${MAX_WORKOUTS_PER_DAY} workouts allowed per day.`);
     }
+
+    // Check for duplicate workout name in the same day
+    if (day && day.workouts.some(w => w.name.toLowerCase() === workout.name.toLowerCase())) {
+      throw new Error(`A workout with the name "${workout.name}" already exists on this day.`);
+    }
     
     const newWorkout: Workout = {
       ...workout,
@@ -109,6 +114,14 @@ class ApiClient {
     const day = await this.getDay(dayDate);
     if (!day) {
       throw new Error(`Day ${dayDate} not found`);
+    }
+
+    // Check for duplicate workout name (excluding the current workout)
+    const duplicateWorkout = day.workouts.find(w => 
+      w.id !== workout.id && w.name.toLowerCase() === workout.name.toLowerCase()
+    );
+    if (duplicateWorkout) {
+      throw new Error(`A workout with the name "${workout.name}" already exists on this day.`);
     }
 
     const updatedDay = {

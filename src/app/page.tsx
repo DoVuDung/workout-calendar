@@ -279,10 +279,10 @@ export default function Home() {
     console.log('Adding workout for day:', dayId);
     const newWorkout: Workout = {
       id: `workout-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      name: 'New Workout',
+      name: '',
       exercises: [],
-      duration: 60,
-      difficulty: 'intermediate',
+      duration: 0,
+      difficulty: 'beginner',
       color: '#5A57CB',
     };
 
