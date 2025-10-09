@@ -177,8 +177,9 @@ export function ExerciseItem({
             variant="ghost"
             size="icon"
             onClick={() => onDelete(exercise.id)}
+            className="h-8 w-8 hover:bg-red-50"
           >
-            <MdDelete className="w-4 h-4 text-red-600" />
+            <MdDelete className="h-4 w-4" style={{ color: '#EF4444' }} />
           </Button>
         </div>
       </div>

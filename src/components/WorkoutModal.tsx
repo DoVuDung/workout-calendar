@@ -125,9 +125,9 @@ export function WorkoutModal({
                   onClose();
                 }
               }}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="h-8 w-8 hover:bg-red-50"
             >
-              <MdDelete className="w-5 h-5" />
+              <MdDelete className="h-4 w-4" style={{ color: '#EF4444' }} />
             </Button>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <MdClose className="w-5 h-5" />
