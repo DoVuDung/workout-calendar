@@ -28,10 +28,20 @@ export function useCalendarData(currentDate: Date) {
         const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(startOfWeek.getDate() + 6);
 
+
         const currentWeekDays = apiDays.filter(day => {
           const dayDate = new Date(day.date);
-          return dayDate >= startOfWeek && dayDate <= endOfWeek;
+          // Set time to 00:00:00 for accurate date comparison
+          dayDate.setHours(0, 0, 0, 0);
+          startOfWeek.setHours(0, 0, 0, 0);
+          endOfWeek.setHours(0, 0, 0, 0);
+          
+          const isInRange = dayDate >= startOfWeek && dayDate <= endOfWeek;
+          
+          
+          return isInRange;
         });
+
 
         // Always generate a complete week (7 days) and merge with API data
         const completeWeek = generateCalendarData(currentDate);
@@ -39,18 +49,22 @@ export function useCalendarData(currentDate: Date) {
         // Merge API data with generated week
         const mergedWeek = completeWeek.map(day => {
           const apiDay = currentWeekDays.find(apiDay => apiDay.date === day.date);
-          return apiDay || day; // Use API data if available, otherwise use generated (empty) day
+          const result = apiDay || day; // Use API data if available, otherwise use generated (empty) day
+          
+          
+          return result;
         });
+
 
         return mergedWeek;
       } catch (error) {
-        console.warn('Failed to fetch from API, falling back to generated data:', error);
       }
       
       // Fallback to generated data (empty days)
       return generateCalendarData(currentDate, false);
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Always refetch when date changes
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -83,7 +97,6 @@ export function useDayData(date: string) {
           return dayData;
         }
       } catch (error) {
-        console.warn('Failed to fetch day from API, falling back to generated data:', error);
       }
       
       // Fallback to generated data (empty day)

@@ -4,7 +4,7 @@ import { CalendarView, useCalendarData, useUpdateCalendarData } from '@/modules/
 import { WorkoutModalView, useCreateWorkout, useUpdateWorkout, useDeleteWorkout, useMoveWorkout, useReorderWorkout } from '@/modules/workout';
 import { LoadingView, ErrorView } from '@/modules/shared';
 import { Day, Workout } from '@/types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useToast } from '@/hooks/use-toast';
@@ -25,6 +25,11 @@ export default function Home() {
   const moveWorkoutMutation = useMoveWorkout();
   const reorderWorkoutMutation = useReorderWorkout();
   const { toast } = useToast();
+
+  // Refetch data when currentDate changes
+  useEffect(() => {
+    refetch();
+  }, [currentDate, refetch]);
 
   const getWeekRange = (date: Date) => {
     const startOfWeek = new Date(date);
@@ -71,6 +76,8 @@ export default function Home() {
       const targetDate = new Date(targetDayId);
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Reset time to start of day
+      targetDate.setHours(0, 0, 0, 0); // Reset time to start of day
+      
       
       if (targetDate < today) {
         toast({
@@ -276,7 +283,6 @@ export default function Home() {
   };
 
   const handleAddWorkout = (dayId: string) => {
-    console.log('Adding workout for day:', dayId);
     const newWorkout: Workout = {
       id: `workout-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       name: '',
@@ -310,7 +316,7 @@ export default function Home() {
         <header className="bg-white">
           <div className="w-full px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <h1 className="text-3xl font-bold text-blue-600">Muscle Track</h1>
+              <h1 className="text-2xl font-bold" style={{ color: '#5A57CB' }}>Muscle Track</h1>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => {
@@ -319,6 +325,7 @@ export default function Home() {
                     setCurrentDate(newDate);
                   }}
                   className="p-2 rounded-lg hover:bg-muted transition-colors"
+                  aria-label="Previous week"
                 >
                   ←
                 </button>
@@ -332,6 +339,7 @@ export default function Home() {
                     setCurrentDate(newDate);
                   }}
                   className="p-2 rounded-lg hover:bg-muted transition-colors"
+                  aria-label="Next week"
                 >
                   →
                 </button>

@@ -12,6 +12,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { MdAdd, MdDelete, MdClose } from 'react-icons/md';
 import { AddExerciseFormView } from './AddExerciseFormView';
 import { ExerciseItemView } from './ExerciseItemView';
+import { DumbbellLoader } from '@/components/ui/DumbbellLoader';
 
 interface WorkoutModalViewProps {
   workout: Workout;
@@ -30,7 +31,6 @@ export function WorkoutModalView({
   onExerciseDrop,
   isNewWorkout = false,
 }: WorkoutModalViewProps) {
-  console.log('WorkoutModalView rendered with isNewWorkout:', isNewWorkout, 'workout:', workout);
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [workoutData, setWorkoutData] = useState(workout);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -78,7 +78,6 @@ export function WorkoutModalView({
     if (confirm('Are you sure you want to delete this workout?')) {
       onDelete(workout.id);
     } else {
-      console.error('User cancelled deletion');
     }
   };
 
@@ -136,6 +135,7 @@ export function WorkoutModalView({
                 className="h-8 w-8 hover:bg-red-50"
                 type="button"
                 title="Delete workout"
+                aria-label="Delete workout"
                 style={{ zIndex: 1000 }}
               >
                 <MdDelete className="h-4 w-4" style={{ color: '#EF4444' }} />
@@ -147,6 +147,7 @@ export function WorkoutModalView({
               onClick={onClose}
               className="h-8 w-8 text-black hover:bg-gray-100"
               type="button"
+              aria-label="Close modal"
             >
               <MdClose className="h-4 w-4 text-black" />
             </Button>
@@ -256,7 +257,7 @@ export function WorkoutModalView({
             >
               {isSubmitting ? (
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <DumbbellLoader size="sm" message="" />
                   <span>Saving...</span>
                 </div>
               ) : (

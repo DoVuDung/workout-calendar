@@ -6,6 +6,7 @@ import { Day, Workout } from '@/types';
 import { useDayData, useUpdateCalendarData } from '@/modules/calendar';
 import { useUpdateWorkout } from '@/modules/workout';
 import { useMoveExercise } from '@/modules/workout';
+import { DumbbellLoader } from '@/components/ui/DumbbellLoader';
 
 interface DayPageProps {
   params: {
@@ -68,9 +69,8 @@ export default function DayPage({ params }: DayPageProps) {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading day data...</p>
+        <div className="flex flex-col items-center justify-center">
+          <DumbbellLoader size="lg" message="Loading day data..." />
         </div>
       </div>
     );

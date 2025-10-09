@@ -1,116 +1,243 @@
 {
   "days": [
     {
+      "id": "2025-10-06",
+      "date": "2025-10-06",
+      "workouts": [
+        {
+          "id": "workout-1760055169583-7cj8lk2gg",
+          "name": "Morning Cardio",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-1",
+              "name": "Treadmill Running",
+              "sets": 1,
+              "weight": 0,
+              "reps": 30,
+              "type": "cardio"
+            },
+            {
+              "id": "exercise-1760055169583-2",
+              "name": "Jump Rope",
+              "sets": 3,
+              "weight": 0,
+              "reps": 100,
+              "type": "cardio"
+            }
+          ],
+          "duration": 45,
+          "difficulty": "beginner",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760055169583-2",
+          "name": "Evening Stretch",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-3",
+              "name": "Yoga Flow",
+              "sets": 1,
+              "weight": 0,
+              "reps": 20,
+              "type": "flexibility"
+            }
+          ],
+          "duration": 30,
+          "difficulty": "beginner",
+          "color": "#5A57CB"
+        }
+      ]
+    },
+    {
+      "id": "2025-10-07",
+      "date": "2025-10-07",
+      "workouts": [
+        {
+          "id": "workout-1760055169583-3",
+          "name": "Upper Body Strength",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-4",
+              "name": "Bench Press",
+              "sets": 4,
+              "weight": 135,
+              "reps": 8,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-5",
+              "name": "Pull-ups",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-6",
+              "name": "Overhead Press",
+              "sets": 3,
+              "weight": 95,
+              "reps": 8,
+              "type": "strength"
+            }
+          ],
+          "duration": 75,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        }
+      ]
+    },
+    {
+      "id": "2025-10-08",
+      "date": "2025-10-08",
+      "workouts": [
+        {
+          "id": "workout-1760055169583-4",
+          "name": "Leg Day",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-8",
+              "name": "Deadlifts",
+              "sets": 3,
+              "weight": 225,
+              "reps": 6,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-9",
+              "name": "Lunges",
+              "sets": 3,
+              "weight": 45,
+              "reps": 12,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-7",
+              "name": "Squats",
+              "sets": 4,
+              "weight": 185,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 90,
+          "difficulty": "advanced",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760055169583-5",
+          "name": "Core Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-10",
+              "name": "Plank",
+              "sets": 3,
+              "weight": 0,
+              "reps": 60,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-11",
+              "name": "Russian Twists",
+              "sets": 3,
+              "weight": 25,
+              "reps": 20,
+              "type": "strength"
+            }
+          ],
+          "duration": 25,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        }
+      ]
+    },
+    {
       "id": "2025-10-09",
       "date": "2025-10-09",
-      "workouts": []
+      "workouts": [
+        {
+          "id": "workout-1760055169583-6",
+          "name": "HIIT Training",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-13",
+              "name": "Mountain Climbers",
+              "sets": 4,
+              "weight": 0,
+              "reps": 30,
+              "type": "cardio"
+            },
+            {
+              "id": "exercise-1760055169583-14",
+              "name": "High Knees",
+              "sets": 4,
+              "weight": 0,
+              "reps": 45,
+              "type": "cardio"
+            },
+            {
+              "id": "exercise-1760055169583-12",
+              "name": "Burpees",
+              "sets": 4,
+              "weight": 0,
+              "reps": 15,
+              "type": "cardio"
+            }
+          ],
+          "duration": 40,
+          "difficulty": "advanced",
+          "color": "#5A57CB"
+        }
+      ]
     },
     {
       "id": "2025-10-10",
       "date": "2025-10-10",
       "workouts": [
         {
-          "id": "workout-1760020808180-1ftccdf5v",
-          "name": "New Workout",
-          "exercises": [],
-          "duration": 60,
+          "id": "workout-1760055169583-7",
+          "name": "Push Day",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-16",
+              "name": "Dips",
+              "sets": 3,
+              "weight": 0,
+              "reps": 12,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-15",
+              "name": "Incline Bench Press",
+              "sets": 4,
+              "weight": 115,
+              "reps": 10,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-17",
+              "name": "Lateral Raises",
+              "sets": 3,
+              "weight": 20,
+              "reps": 15,
+              "type": "strength"
+            }
+          ],
+          "duration": 70,
           "difficulty": "intermediate",
           "color": "#5A57CB"
         },
         {
-          "id": "workout-1760017432343-l42pu34w0",
-          "name": "New Workout",
+          "id": "workout-1760055169583-8",
+          "name": "Swimming",
           "exercises": [
             {
-              "id": "exercise-1760017625280-6gxu1uzt8",
-              "name": "asdasdasd",
-              "sets": 3,
+              "id": "exercise-1760055169583-18",
+              "name": "Freestyle Laps",
+              "sets": 1,
               "weight": 0,
-              "reps": 10,
-              "type": "strength"
-            },
-            {
-              "id": "exercise-1760017635143-ts86ftpp4",
-              "name": "asasdasdasdasdasdasdasdasdasd",
-              "sets": 3,
-              "weight": 0,
-              "reps": 10,
-              "type": "strength"
-            }
-          ],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760023472185-bsl8hln1u",
-          "name": "123123123",
-          "exercises": [
-            {
-              "id": "exercise-1760023484591-4iszbwmfa",
-              "name": "123123123123123123123",
-              "sets": 3,
-              "weight": 0,
-              "reps": 10,
-              "type": "strength"
-            },
-            {
-              "id": "exercise-1760023495802-sxwz2hqk6",
-              "name": "123123123123ffff",
-              "sets": 3,
-              "weight": 0,
-              "reps": 10,
-              "type": "strength"
-            },
-            {
-              "id": "exercise-1760023507122-gmty1u8wd",
-              "name": "asdasdasdasd",
-              "sets": 3,
-              "weight": 111111,
-              "reps": 10,
-              "type": "strength"
-            }
-          ],
-          "duration": 0,
-          "difficulty": "beginner",
-          "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760017954719-y6wi2bt33",
-          "name": "New Workout",
-          "exercises": [
-            {
-              "id": "exercise-1760018523146-6dy4eya6a",
-              "name": "hhhhh",
-              "sets": 3,
-              "weight": 0,
-              "reps": 10,
-              "type": "strength"
-            },
-            {
-              "id": "exercise-1760018539819-o8kvqd8m6",
-              "name": "gdfgdfgdfgdfg",
-              "sets": 3,
-              "weight": 0,
-              "reps": 10,
-              "type": "strength"
-            }
-          ],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760018759201-7whv0vfsz",
-          "name": "New Workout",
-          "exercises": [
-            {
-              "id": "exercise-1760018810460-5tcp29cww",
-              "name": "g",
-              "sets": 3,
-              "weight": 0,
-              "reps": 10,
-              "type": "strength"
+              "reps": 20,
+              "type": "cardio"
             }
           ],
           "duration": 60,
@@ -122,132 +249,158 @@
     {
       "id": "2025-10-11",
       "date": "2025-10-11",
-      "workouts": []
+      "workouts": [
+        {
+          "id": "workout-1760055169583-9",
+          "name": "Pull Day",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-20",
+              "name": "Lat Pulldowns",
+              "sets": 3,
+              "weight": 120,
+              "reps": 10,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-19",
+              "name": "Barbell Rows",
+              "sets": 4,
+              "weight": 135,
+              "reps": 8,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-21",
+              "name": "Bicep Curls",
+              "sets": 3,
+              "weight": 30,
+              "reps": 12,
+              "type": "strength"
+            }
+          ],
+          "duration": 75,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        }
+      ]
     },
     {
       "id": "2025-10-12",
       "date": "2025-10-12",
       "workouts": [
         {
-          "id": "workout-1760018774490-h2nn4b9gr",
-          "name": "New Workout",
+          "id": "workout-1760055169583-10",
+          "name": "Active Recovery",
           "exercises": [
             {
-              "id": "exercise-1760018783366-kq3zxsh9j",
-              "name": "asdasdasdasd",
-              "sets": 3,
+              "id": "exercise-1760055169583-23",
+              "name": "Stretching",
+              "sets": 1,
               "weight": 0,
-              "reps": 10,
-              "type": "strength"
+              "reps": 30,
+              "type": "flexibility"
+            },
+            {
+              "id": "exercise-1760055169583-22",
+              "name": "Light Walking",
+              "sets": 1,
+              "weight": 0,
+              "reps": 45,
+              "type": "cardio"
             }
           ],
           "duration": 60,
-          "difficulty": "intermediate",
+          "difficulty": "beginner",
           "color": "#5A57CB"
-        },
+        }
+      ]
+    },
+    {
+      "id": "2025-10-13",
+      "date": "2025-10-13",
+      "workouts": [
         {
-          "id": "workout-1760017968737-jxyt4n8ht",
-          "name": "New Workout",
+          "id": "workout-1760055169583-11",
+          "name": "Full Body Circuit",
           "exercises": [
             {
-              "id": "exercise-1760018509641-m5bzljoxd",
-              "name": "asdasd",
+              "id": "exercise-1760055169583-24",
+              "name": "Thrusters",
               "sets": 3,
-              "weight": 0,
-              "reps": 10,
-              "type": "strength"
-            }
-          ],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760017959752-dwbci7civ",
-          "name": "New Workout",
-          "exercises": [
-            {
-              "id": "exercise-1760018516649-s5zd1vm46",
-              "name": "asdasfff",
-              "sets": 3,
-              "weight": 0,
-              "reps": 10,
+              "weight": 75,
+              "reps": 12,
               "type": "strength"
             },
             {
-              "id": "exercise-1760020753440-yrbbvd93i",
-              "name": "asdasdasdasdasdasd",
+              "id": "exercise-1760055169583-25",
+              "name": "Kettlebell Swings",
+              "sets": 3,
+              "weight": 35,
+              "reps": 15,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-26",
+              "name": "Box Jumps",
               "sets": 3,
               "weight": 0,
               "reps": 10,
-              "type": "strength"
+              "type": "cardio"
+            }
+          ],
+          "duration": 50,
+          "difficulty": "advanced",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760055169583-12",
+          "name": "Yoga Session",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-27",
+              "name": "Vinyasa Flow",
+              "sets": 1,
+              "weight": 0,
+              "reps": 60,
+              "type": "flexibility"
             }
           ],
           "duration": 60,
-          "difficulty": "intermediate",
+          "difficulty": "beginner",
           "color": "#5A57CB"
         }
       ]
     },
     {
-      "id": "2025-09-30",
-      "date": "2025-09-30",
-      "workouts": [
-        {
-          "id": "workout-1760022033372-olentm07u",
-          "name": "New Workout",
-          "exercises": [],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760022043274-p8slz9752",
-          "name": "New Workout",
-          "exercises": [],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760022045839-e9uj7hc06",
-          "name": "New Workout",
-          "exercises": [],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        }
-      ]
+      "id": "2025-10-14",
+      "date": "2025-10-14",
+      "workouts": []
     },
     {
-      "id": "2025-10-01",
-      "date": "2025-10-01",
-      "workouts": [
-        {
-          "id": "workout-1760022036348-i119qwthj",
-          "name": "New Workout",
-          "exercises": [],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760022038992-icoj8wljj",
-          "name": "New Workout",
-          "exercises": [],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760022040928-5yowp3jy3",
-          "name": "New Workout",
-          "exercises": [],
-          "duration": 60,
-          "difficulty": "intermediate",
-          "color": "#5A57CB"
-        }
-      ]
+      "id": "2025-10-19",
+      "date": "2025-10-19",
+      "workouts": []
+    },
+    {
+      "id": "2025-10-18",
+      "date": "2025-10-18",
+      "workouts": []
+    },
+    {
+      "id": "2025-10-17",
+      "date": "2025-10-17",
+      "workouts": []
+    },
+    {
+      "id": "2025-10-16",
+      "date": "2025-10-16",
+      "workouts": []
+    },
+    {
+      "id": "2025-10-15",
+      "date": "2025-10-15",
+      "workouts": []
     }
   ]
 }

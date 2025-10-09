@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Exercise } from '@/types';
 import { useState } from 'react';
 import { MdEdit, MdClose, MdFitnessCenter, MdDirectionsRun, MdSelfImprovement } from 'react-icons/md';
+import { DumbbellLoader } from '@/components/ui/DumbbellLoader';
 
 interface EditExerciseFormProps {
   exercise: Exercise;
@@ -96,11 +97,11 @@ export function EditExerciseForm({ exercise, onSave, onCancel }: EditExerciseFor
   const getTypeButtonColor = (type: string) => {
     switch (type) {
       case 'strength':
-        return 'border-red-200 bg-red-50 text-red-700 hover:bg-red-100';
+        return 'border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100';
       case 'cardio':
-        return 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100';
+        return 'border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100';
       case 'flexibility':
-        return 'border-green-200 bg-green-50 text-green-700 hover:bg-green-100';
+        return 'border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100';
       default:
         return 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100';
     }
@@ -120,6 +121,7 @@ export function EditExerciseForm({ exercise, onSave, onCancel }: EditExerciseFor
           size="icon" 
           onClick={onCancel}
           className="hover:bg-destructive/10 hover:text-destructive"
+          aria-label="Cancel editing exercise"
         >
           <MdClose className="w-4 h-4" />
         </Button>
@@ -288,7 +290,7 @@ export function EditExerciseForm({ exercise, onSave, onCancel }: EditExerciseFor
             className="flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground min-h-[40px] px-6"
           >
             {isSaving ? (
-              <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <DumbbellLoader size="sm" message="" />
             ) : (
               <MdEdit className="w-4 h-4" />
             )}

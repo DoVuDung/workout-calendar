@@ -99,6 +99,7 @@ export function WorkoutCardView({ workout, onClick, onWorkoutReorder, onMoveWork
               e.stopPropagation();
               setShowMenu(!showMenu);
             }}
+            aria-label="Workout options menu"
           >
             <MdMoreHoriz className="w-3 h-3 text-[#C4C4C4]" />
           </Button>

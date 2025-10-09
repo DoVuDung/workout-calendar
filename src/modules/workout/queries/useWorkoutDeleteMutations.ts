@@ -11,20 +11,16 @@ export function useDeleteWorkout() {
 
   return useMutation({
     mutationFn: async ({ workoutId, dayDate }: { workoutId: string; dayDate: string }) => {
-      console.log('Mutation: Deleting workout', workoutId, 'from day', dayDate);
       await apiClient.deleteWorkout(dayDate, workoutId);
-      console.log('Mutation: Delete completed successfully');
       return workoutId;
     },
     onSuccess: (workoutId) => {
-      console.log('Mutation: onSuccess called for workout', workoutId);
       // Remove from cache
       queryClient.removeQueries({ queryKey: workoutKeys.detail(workoutId) });
       // Invalidate workout lists
       queryClient.invalidateQueries({ queryKey: workoutKeys.all });
       // Also invalidate calendar data to sync with day views
       queryClient.invalidateQueries({ queryKey: calendarKeys.all });
-      console.log('Mutation: Cache invalidated');
       
       toast({
         title: "Workout Deleted",
@@ -33,7 +29,6 @@ export function useDeleteWorkout() {
       });
     },
     onError: (error) => {
-      console.error('Mutation: Delete failed with error:', error);
       toast({
         title: "Error",
         description: "Failed to delete workout. Please try again.",

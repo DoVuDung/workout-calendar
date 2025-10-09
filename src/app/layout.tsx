@@ -7,11 +7,18 @@ import { Toaster } from '@/components/ui/toaster';
 const openSans = Open_Sans({
   subsets: ['latin'],
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
 });
 
 export const metadata: Metadata = {
   title: 'Workout Calendar',
   description: 'Manage your training workouts with drag and drop',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

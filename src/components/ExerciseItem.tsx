@@ -79,11 +79,11 @@ export function ExerciseItem({
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'strength':
-        return 'bg-red-100 text-red-800';
+        return 'bg-purple-100 text-purple-800';
       case 'cardio':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-indigo-100 text-indigo-800';
       case 'flexibility':
-        return 'bg-green-100 text-green-800';
+        return 'bg-violet-100 text-violet-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -92,11 +92,11 @@ export function ExerciseItem({
   const getTypeButtonColor = (type: string) => {
     switch (type) {
       case 'strength':
-        return 'border-red-200 bg-red-50 text-red-700 hover:bg-red-100';
+        return 'border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100';
       case 'cardio':
-        return 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100';
+        return 'border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100';
       case 'flexibility':
-        return 'border-green-200 bg-green-50 text-green-700 hover:bg-green-100';
+        return 'border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100';
       default:
         return 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100';
     }
@@ -170,6 +170,7 @@ export function ExerciseItem({
             variant="ghost"
             size="icon"
             onClick={() => setIsEditing(true)}
+            aria-label="Edit exercise"
           >
             <MdEdit className="w-4 h-4" />
           </Button>
@@ -178,6 +179,7 @@ export function ExerciseItem({
             size="icon"
             onClick={() => onDelete(exercise.id)}
             className="h-8 w-8 hover:bg-red-50"
+            aria-label="Delete exercise"
           >
             <MdDelete className="h-4 w-4" style={{ color: '#EF4444' }} />
           </Button>

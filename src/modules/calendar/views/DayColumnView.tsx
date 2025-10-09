@@ -91,6 +91,7 @@ export function DayColumnView({
             }
           }}
           title={isDayFull ? `Maximum ${MAX_WORKOUTS_PER_DAY} workouts per day` : 'Add workout'}
+          aria-label={isDayFull ? `Maximum ${MAX_WORKOUTS_PER_DAY} workouts per day` : 'Add workout'}
         >
           <MdAdd className="w-3 h-3 text-white" />
         </Button>

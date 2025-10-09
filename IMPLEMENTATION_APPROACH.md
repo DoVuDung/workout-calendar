@@ -175,7 +175,7 @@ interface Exercise {
 }
 ```
 
-## 🎨 UI/UX Implementation
+## UI/UX Implementation
 
 ### 1. Design System Approach
 
@@ -445,7 +445,7 @@ import { MdAdd, MdDelete } from 'react-icons/md';
 </div>
 ```
 
-## 🧪 Testing Strategy
+## Testing Strategy
 
 ### 1. Component Testing
 

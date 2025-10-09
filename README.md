@@ -63,6 +63,17 @@ src/
 └── utils/               # Utility functions
 ```
 
+## Documentation
+
+This project includes comprehensive documentation to help you understand and work with the codebase:
+
+- **[GETTING_STARTED.md](./GETTING_STARTED.md)** - Complete setup guide with prerequisites, installation, and troubleshooting
+- **[IMPLEMENTATION_APPROACH.md](./IMPLEMENTATION_APPROACH.md)** - Detailed technical implementation approach and architecture decisions
+- **[API_SETUP.md](./API_SETUP.md)** - JSON Server setup and API integration guide
+- **[MODULAR_ARCHITECTURE.md](./MODULAR_ARCHITECTURE.md)** - Modular architecture documentation and component structure
+- **[DOCKER.md](./DOCKER.md)** - Docker setup and deployment instructions
+- **[test-execution-guide.md](./test-execution-guide.md)** - Comprehensive testing guide with test scenarios and execution instructions
+
 ## Build
 
 To create a production build:

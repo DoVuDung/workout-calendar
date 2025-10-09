@@ -101,6 +101,7 @@ export function WorkoutCard({ workout, onClick, onWorkoutReorder, onMoveWorkout 
                 e.stopPropagation();
                 setShowMenu(!showMenu);
               }}
+              aria-label="Workout options menu"
             >
               <MdMoreHoriz className="w-3 h-3" />
             </Button>

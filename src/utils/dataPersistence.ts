@@ -10,7 +10,6 @@ export function getStoredCalendarData(): Day[] | null {
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored ? JSON.parse(stored) : null;
   } catch (error) {
-    console.error('Error loading calendar data from localStorage:', error);
     return null;
   }
 }
@@ -22,7 +21,6 @@ export function storeCalendarData(data: Day[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch (error) {
-    console.error('Error storing calendar data to localStorage:', error);
   }
 }
 

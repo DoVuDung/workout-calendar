@@ -153,6 +153,7 @@ export function ExerciseItemView({
           onClick={onDelete}
           className="h-8 w-8 hover:bg-red-50"
           type="button"
+          aria-label="Delete exercise"
         >
           <MdDelete className="h-4 w-4" style={{ color: '#EF4444' }} />
         </Button>

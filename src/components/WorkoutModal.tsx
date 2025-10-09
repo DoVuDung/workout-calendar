@@ -116,9 +116,9 @@ export function WorkoutModal({
             </span>
           </div>
           <div className="flex items-center space-x-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => {
                 if (confirm('Are you sure you want to delete this workout?')) {
                   onDelete(workout.id);
@@ -126,10 +126,11 @@ export function WorkoutModal({
                 }
               }}
               className="h-8 w-8 hover:bg-red-50"
+              aria-label="Delete workout"
             >
               <MdDelete className="h-4 w-4" style={{ color: '#EF4444' }} />
             </Button>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close modal">
               <MdClose className="w-5 h-5" />
             </Button>
           </div>

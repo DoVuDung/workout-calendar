@@ -69,12 +69,10 @@ class ApiClient {
   }
 
   async createWorkout(dayDate: string, workout: Omit<Workout, 'id'>): Promise<Workout> {
-    console.log('API: Creating workout for date:', dayDate, 'with workout:', workout);
     
     const MAX_WORKOUTS_PER_DAY = 5;
     
     let day = await this.getDay(dayDate);
-    console.log('API: Existing day found:', day);
     
     // Check if day is full
     if (day && day.workouts.length >= MAX_WORKOUTS_PER_DAY) {
@@ -97,7 +95,6 @@ class ApiClient {
         date: dayDate,
         workouts: [],
       };
-      console.log('API: Creating new day:', day);
     }
 
     const updatedDay = {
@@ -105,7 +102,6 @@ class ApiClient {
       workouts: [...day.workouts, newWorkout],
     };
 
-    console.log('API: Updating day with new workout:', updatedDay);
     await this.updateDay(updatedDay);
     return newWorkout;
   }
@@ -134,9 +130,7 @@ class ApiClient {
   }
 
   async deleteWorkout(dayDate: string, workoutId: string): Promise<void> {
-    console.log('API: Deleting workout', workoutId, 'from day', dayDate);
     const day = await this.getDay(dayDate);
-    console.log('API: Day found:', day);
     
     if (!day) {
       throw new Error(`Day ${dayDate} not found`);
@@ -147,9 +141,7 @@ class ApiClient {
       workouts: day.workouts.filter(w => w.id !== workoutId),
     };
 
-    console.log('API: Updated day after deletion:', updatedDay);
     await this.updateDay(updatedDay);
-    console.log('API: Workout deleted successfully');
   }
 
   async moveWorkout(workoutId: string, fromDayDate: string, toDayDate: string): Promise<void> {
