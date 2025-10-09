@@ -137,15 +137,15 @@ workout-calendar/
 
 ## Features Overview
 
-- **📅 Weekly Calendar View**: Monday through Sunday with proper date display
-- **🎯 Today Highlighting**: Current day is highlighted in purple and bolded
-- **🔄 Drag & Drop Workouts**: Move workouts between different days
-- **📝 Drag & Drop Exercises**: Reorder exercises within workouts
-- **💪 Workout Management**: 
+- **Weekly Calendar View**: Monday through Sunday with proper date display
+- **Today Highlighting**: Current day is highlighted in purple and bolded
+- **Drag & Drop Workouts**: Move workouts between different days
+- **Drag & Drop Exercises**: Reorder exercises within workouts
+- **Workout Management**: 
   - Purple workout names with truncation for long names
   - Exercise details with set information (e.g., "50 lb x 5, 60 lb x 5, 70 lb x 5")
   - Set count display (e.g., "3x")
-- **📱 Responsive Design**: Clean, modern UI that works on all devices
+- **Responsive Design**: Clean, modern UI that works on all devices
 
 ## Tech Stack
 
