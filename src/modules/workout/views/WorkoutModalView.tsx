@@ -33,6 +33,25 @@ export function WorkoutModalView({
   console.log('WorkoutModalView rendered with isNewWorkout:', isNewWorkout, 'workout:', workout);
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [workoutData, setWorkoutData] = useState(workout);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    // Check if workout name is required
+    if (!workoutData.name.trim()) {
+      newErrors.name = 'Workout name is required';
+    }
+
+    // Check if workout name is not the default name
+    if (workoutData.name.trim() === 'New Workout') {
+      newErrors.name = 'Please enter a proper workout name';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const [{ isDragging }, drag] = useDrag({
     type: 'workout',
@@ -42,8 +61,17 @@ export function WorkoutModalView({
     }),
   });
 
-  const handleSave = () => {
-    onUpdate(workoutData);
+  const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      onUpdate(workoutData);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDelete = () => {
@@ -96,7 +124,7 @@ export function WorkoutModalView({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-xl font-bold">
+          <CardTitle className="text-[13px] font-bold" style={{ color: '#5A57CB' }}>
             {isNewWorkout ? 'Add New Workout' : 'Edit Workout'}
           </CardTitle>
           <div className="flex items-center space-x-2">
@@ -105,12 +133,12 @@ export function WorkoutModalView({
                 size="icon"
                 variant="ghost"
                 onClick={handleDelete}
-                className="h-8 w-8 hover:bg-red-50 border border-red-200"
+                className="h-8 w-8 hover:bg-red-50"
                 type="button"
                 title="Delete workout"
                 style={{ zIndex: 1000 }}
               >
-                <MdDelete className="h-4 w-4 text-red-600" />
+                <MdDelete className="h-4 w-4" style={{ color: '#EF4444' }} />
               </Button>
             )}
             <Button
@@ -129,18 +157,29 @@ export function WorkoutModalView({
           {/* Workout Details */}
           <div className="space-y-4">
             <div>
-              <Label htmlFor="workout-name" className="text-sm font-medium">Workout Name</Label>
+              <Label htmlFor="workout-name" className="text-[10px] font-medium">Workout Name</Label>
               <Input
                 id="workout-name"
                 value={workoutData.name}
-                onChange={(e) => setWorkoutData(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e) => {
+                  setWorkoutData(prev => ({ ...prev, name: e.target.value }));
+                  if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
+                }}
                 className="mt-1 h-10"
+                style={{
+                  borderColor: errors.name ? '#EF4444' : undefined,
+                  borderWidth: errors.name ? '1px' : undefined
+                }}
+                required
               />
+              {errors.name && (
+                <p className="text-[10px] mt-1" style={{ color: '#EF4444' }}>{errors.name}</p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="duration" className="text-sm font-medium">Duration (minutes)</Label>
+                <Label htmlFor="duration" className="text-[10px] font-medium">Duration (minutes)</Label>
                 <Input
                   id="duration"
                   type="number"
@@ -150,7 +189,7 @@ export function WorkoutModalView({
                 />
               </div>
               <div>
-                <Label htmlFor="difficulty" className="text-sm font-medium">Difficulty</Label>
+                <Label htmlFor="difficulty" className="text-[10px] font-medium">Difficulty</Label>
                 <select
                   id="difficulty"
                   value={workoutData.difficulty}
@@ -168,10 +207,11 @@ export function WorkoutModalView({
           {/* Exercises */}
           <div>
             <div className="flex items-center justify-between mb-4 !mt-4">
-              <h3 className="text-lg font-semibold">Exercises</h3>
+              <h3 className="text-[13px] font-semibold" style={{ color: '#5A57CB' }}>Exercises</h3>
               <Button
                 onClick={() => setIsAddingExercise(true)}
                 className="flex items-center space-x-2 text-white" 
+                style={{ backgroundColor: '#5A57CB' }}
                 type="button"
               >
                 <MdAdd className="h-4 w-4 text-white" />
@@ -209,10 +249,19 @@ export function WorkoutModalView({
             </Button>
             <Button 
               onClick={handleSave} 
-              className="color-black"
+              className="text-white"
+              style={{ backgroundColor: '#5A57CB' }}
               type="button"
+              disabled={isSubmitting}
             >
-              {isNewWorkout ? 'Create Workout' : 'Save Workout'}
+              {isSubmitting ? (
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <span>Saving...</span>
+                </div>
+              ) : (
+                isNewWorkout ? 'Create Workout' : 'Save Workout'
+              )}
             </Button>
           </div>
         </CardContent>
