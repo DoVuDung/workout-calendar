@@ -1,17 +1,19 @@
 'use client';
 
 import { CalendarView, useCalendarData, useUpdateCalendarData } from '@/modules/calendar';
-import { WorkoutModalView, useCreateWorkout, useUpdateWorkout, useDeleteWorkout, useMoveWorkout } from '@/modules/workout';
+import { WorkoutModalView, useCreateWorkout, useUpdateWorkout, useDeleteWorkout, useMoveWorkout, useReorderWorkout } from '@/modules/workout';
 import { LoadingView, ErrorView } from '@/modules/shared';
 import { Day, Workout } from '@/types';
 import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
   const [selectedDayId, setSelectedDayId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNewWorkout, setIsNewWorkout] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
 
   // Use React Query hooks
@@ -21,6 +23,8 @@ export default function Home() {
   const updateWorkoutMutation = useUpdateWorkout();
   const deleteWorkoutMutation = useDeleteWorkout();
   const moveWorkoutMutation = useMoveWorkout();
+  const reorderWorkoutMutation = useReorderWorkout();
+  const { toast } = useToast();
 
   const getWeekRange = (date: Date) => {
     const startOfWeek = new Date(date);
@@ -48,37 +52,156 @@ export default function Home() {
   const handleWorkoutDrop = (workoutId: string, targetDayId: string) => {
     if (!calendarData) return;
 
-    const newData = [...calendarData];
-    let sourceDayIndex = -1;
-    let targetDayIndex = -1;
-    let workoutIndex = -1;
+    let sourceDayId = '';
     let workout: Workout | null = null;
 
     // Find the workout and its source day
-    for (let i = 0; i < newData.length; i++) {
-      const day = newData[i];
-      const foundIndex = day.workouts.findIndex(w => w.id === workoutId);
-      if (foundIndex !== -1) {
-        sourceDayIndex = i;
-        workoutIndex = foundIndex;
-        workout = day.workouts[foundIndex];
+    for (const day of calendarData) {
+      const foundWorkout = day.workouts.find(w => w.id === workoutId);
+      if (foundWorkout) {
+        sourceDayId = day.date;
+        workout = foundWorkout;
         break;
       }
     }
 
-    // Find the target day
-    targetDayIndex = newData.findIndex(day => day.date === targetDayId);
-
-    if (sourceDayIndex !== -1 && targetDayIndex !== -1 && workout) {
-      // Remove workout from source day
-      newData[sourceDayIndex].workouts.splice(workoutIndex, 1);
+    // Only move if it's to a different day
+    if (sourceDayId && sourceDayId !== targetDayId && workout) {
+      // Check if target day is in the past
+      const targetDate = new Date(targetDayId);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to start of day
       
-      // Add workout to target day
-      newData[targetDayIndex].workouts.push(workout);
+      if (targetDate < today) {
+        toast({
+          title: "Cannot Move to Past Date",
+          description: "Workouts cannot be moved to past dates. Please select a current or future date.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-      // Update calendar data
-      updateCalendarMutation.mutate({ date: currentDate, updatedData: newData });
+      // Check if target day is full
+      const targetDay = calendarData.find(day => day.date === targetDayId);
+      if (targetDay && targetDay.workouts.length >= 5) {
+        toast({
+          title: "Day is Full",
+          description: "Cannot move workout. The target day already has the maximum number of workouts (5).",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Call API to move workout
+      moveWorkoutMutation.mutate({
+        workoutId: workoutId,
+        fromDayId: sourceDayId,
+        toDayId: targetDayId,
+      }, {
+        onSuccess: () => {
+          // Refetch calendar data to get updated state
+          refetch();
+        },
+        onError: (error) => {
+          toast({
+            title: "Move Failed",
+            description: `Failed to move workout: ${error.message}`,
+            variant: "destructive",
+          });
+        },
+      });
     }
+  };
+
+  const handleWorkoutReorder = (dayId: string, activeWorkoutId: string, overWorkoutId: string) => {
+    if (!calendarData) return;
+
+    const day = calendarData.find(d => d.date === dayId);
+    if (!day) return;
+
+    const overIndex = day.workouts.findIndex(w => w.id === overWorkoutId);
+
+    if (overIndex !== -1) {
+      // Call API to reorder workout
+      reorderWorkoutMutation.mutate({
+        dayDate: dayId,
+        workoutId: activeWorkoutId,
+        targetIndex: overIndex,
+      }, {
+        onSuccess: () => {
+          // Refetch calendar data to get updated state
+          refetch();
+        },
+      });
+    }
+  };
+
+  const handleMoveWorkout = (workoutId: string) => {
+    if (!calendarData) return;
+
+    // Find the workout and its current day
+    let sourceDayId = '';
+    for (const day of calendarData) {
+      const foundWorkout = day.workouts.find(w => w.id === workoutId);
+      if (foundWorkout) {
+        sourceDayId = day.date;
+        break;
+      }
+    }
+
+    if (!sourceDayId) return;
+
+    // Simple implementation: show available days to move to
+    const availableDays = calendarData.filter(day => {
+      // Can't move to the same day
+      if (day.date === sourceDayId) return false;
+      
+      // Can't move to past dates
+      const dayDate = new Date(day.date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (dayDate < today) return false;
+      
+      // Can't move to full days
+      if (day.workouts.length >= 5) return false;
+      
+      return true;
+    });
+
+    if (availableDays.length === 0) {
+      toast({
+        title: "No Available Days",
+        description: "No available days to move this workout to. All other days are either full or in the past.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // For now, move to the first available day
+    // In a real app, you'd show a date picker or day selector
+    const targetDay = availableDays[0];
+    
+    moveWorkoutMutation.mutate({
+      workoutId: workoutId,
+      fromDayId: sourceDayId,
+      toDayId: targetDay.date,
+    }, {
+      onSuccess: () => {
+        refetch();
+        toast({
+          title: "Workout Moved",
+          description: `Workout moved to ${new Date(targetDay.date).toLocaleDateString()}`,
+          variant: "success",
+        });
+      },
+      onError: (error) => {
+        toast({
+          title: "Move Failed",
+          description: `Failed to move workout: ${error.message}`,
+          variant: "destructive",
+        });
+      },
+    });
   };
 
   const handleExerciseDrop = (exerciseId: string, targetWorkoutId: string, targetIndex: number) => {
@@ -101,6 +224,7 @@ export default function Home() {
 
   const handleWorkoutClick = (workout: Workout) => {
     setSelectedWorkout(workout);
+    setIsNewWorkout(false);
     setIsModalOpen(true);
   };
 
@@ -108,20 +232,41 @@ export default function Home() {
     setIsModalOpen(false);
     setSelectedWorkout(null);
     setSelectedDayId(null);
+    setIsNewWorkout(false);
   };
 
   const handleUpdateWorkout = (updatedWorkout: Workout) => {
     if (selectedDayId) {
       // This is a new workout being created
-      createWorkoutMutation.mutate(updatedWorkout, {
+      createWorkoutMutation.mutate({ workoutData: updatedWorkout, dayDate: selectedDayId }, {
         onSuccess: () => {
           handleCloseModal();
           refetch();
         },
       });
     } else {
-      // This is an existing workout being updated
-      updateWorkoutMutation.mutate(updatedWorkout, {
+      // This is an existing workout being updated - we need to find the day
+      const dayWithWorkout = calendarData?.find(day => 
+        day.workouts.some(workout => workout.id === updatedWorkout.id)
+      );
+      if (dayWithWorkout) {
+        updateWorkoutMutation.mutate({ workout: updatedWorkout, dayDate: dayWithWorkout.date }, {
+          onSuccess: () => {
+            handleCloseModal();
+            refetch();
+          },
+        });
+      }
+    }
+  };
+
+  const handleDeleteWorkout = (workoutId: string) => {
+    const dayWithWorkout = calendarData?.find(day => 
+      day.workouts.some(workout => workout.id === workoutId)
+    );
+    
+    if (dayWithWorkout) {
+      deleteWorkoutMutation.mutate({ workoutId, dayDate: dayWithWorkout.date }, {
         onSuccess: () => {
           handleCloseModal();
           refetch();
@@ -130,16 +275,8 @@ export default function Home() {
     }
   };
 
-  const handleDeleteWorkout = (workoutId: string) => {
-    deleteWorkoutMutation.mutate(workoutId, {
-      onSuccess: () => {
-        handleCloseModal();
-        refetch();
-      },
-    });
-  };
-
   const handleAddWorkout = (dayId: string) => {
+    console.log('Adding workout for day:', dayId);
     const newWorkout: Workout = {
       id: `workout-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       name: 'New Workout',
@@ -151,6 +288,7 @@ export default function Home() {
 
     setSelectedDayId(dayId);
     setSelectedWorkout(newWorkout);
+    setIsNewWorkout(true);
     setIsModalOpen(true);
   };
 
@@ -207,7 +345,9 @@ export default function Home() {
             days={calendarData}
             onWorkoutClick={handleWorkoutClick}
             onWorkoutDrop={handleWorkoutDrop}
+            onWorkoutReorder={handleWorkoutReorder}
             onAddWorkout={handleAddWorkout}
+            onMoveWorkout={handleMoveWorkout}
           />
         </main>
 
@@ -218,6 +358,7 @@ export default function Home() {
             onUpdate={handleUpdateWorkout}
             onDelete={handleDeleteWorkout}
             onExerciseDrop={handleExerciseDrop}
+            isNewWorkout={isNewWorkout}
           />
         )}
       </div>

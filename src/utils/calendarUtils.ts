@@ -1,8 +1,9 @@
 import { Day, Workout, Exercise } from '@/types';
+import { getStoredCalendarData } from './dataPersistence';
 
-export function generateCalendarData(currentDate: Date): Day[] {
+export function generateCalendarData(currentDate: Date, includeSampleData: boolean = false): Day[] {
+  // Always generate a complete week (7 days)
   const days: Day[] = [];
-  const today = new Date();
 
   // Get the start of the current week (Monday)
   const startOfWeek = new Date(currentDate);
@@ -17,7 +18,7 @@ export function generateCalendarData(currentDate: Date): Day[] {
 
     const day: Day = {
       date: date.toISOString().split('T')[0], // YYYY-MM-DD format
-      workouts: generateSampleWorkouts(date),
+      workouts: includeSampleData ? generateSampleWorkouts(date) : [],
     };
 
     days.push(day);

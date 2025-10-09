@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react';
 import { DayDetailView } from '@/components/DayDetailView';
 import { Day, Workout } from '@/types';
-import { generateCalendarData } from '@/utils/calendarUtils';
+import { useDayData, useUpdateCalendarData } from '@/modules/calendar';
+import { useUpdateWorkout } from '@/modules/workout';
+import { useMoveExercise } from '@/modules/workout';
 
 interface DayPageProps {
   params: {
@@ -12,33 +14,86 @@ interface DayPageProps {
 }
 
 export default function DayPage({ params }: DayPageProps) {
-  const [day, setDay] = useState<Day | null>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  useEffect(() => {
-    const calendarData = generateCalendarData(currentDate);
-    const foundDay = calendarData.find(d => d.date === params.date);
-    setDay(foundDay || null);
-  }, [params.date, currentDate]);
+  
+  // Use React Query hooks for data management
+  const { data: day, isLoading, error, refetch } = useDayData(params.date);
+  const updateCalendarMutation = useUpdateCalendarData();
+  const updateWorkoutMutation = useUpdateWorkout();
+  const moveExerciseMutation = useMoveExercise();
 
   const handleWorkoutUpdate = (updatedWorkout: Workout) => {
     if (day) {
-      const updatedDay = {
-        ...day,
-        workouts: day.workouts.map(w =>
-          w.id === updatedWorkout.id ? updatedWorkout : w
-        ),
-      };
-      setDay(updatedDay);
+      // Update the workout using the mutation
+      updateWorkoutMutation.mutate({ workout: updatedWorkout, dayDate: day.date }, {
+        onSuccess: () => {
+          // Refetch the day data to get the updated state
+          refetch();
+        },
+      });
     }
   };
 
   const handleExerciseDrop = (
     activeExerciseId: string,
-    overExerciseId: string
+    overExerciseId: string,
+    workoutId: string
   ) => {
-    // This will be handled by the DayDetailView component
+    if (day) {
+      const workout = day.workouts.find(w => w.id === workoutId);
+      if (workout) {
+        const activeIndex = workout.exercises.findIndex(
+          ex => ex.id === activeExerciseId
+        );
+        const overIndex = workout.exercises.findIndex(
+          ex => ex.id === overExerciseId
+        );
+
+        if (activeIndex !== -1 && overIndex !== -1) {
+          moveExerciseMutation.mutate({
+            dayDate: day.date,
+            workoutId: workout.id,
+            exerciseId: activeExerciseId,
+            targetIndex: overIndex,
+          }, {
+            onSuccess: () => {
+              refetch();
+            },
+          });
+        }
+      }
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading day data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Error loading day
+          </h1>
+          <p className="text-gray-600 mb-4">Failed to load the requested day.</p>
+          <button 
+            onClick={() => refetch()}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!day) {
     return (

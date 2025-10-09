@@ -1,0 +1,221 @@
+{
+  "days": [
+    {
+      "id": "2025-10-09",
+      "date": "2025-10-09",
+      "workouts": [
+        {
+          "id": "workout-1760018760926-qowal0e3v",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760018804248-21fafe75t",
+              "name": "fffff",
+              "sets": 1,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760017432343-l42pu34w0",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760017625280-6gxu1uzt8",
+              "name": "asdasdasd",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760017635143-ts86ftpp4",
+              "name": "asasdasdasdasdasdasdasdasdasd",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760018772588-h62k19bw0",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760018788662-43sp8df2q",
+              "name": "asdasdasd",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760018762539-ugoxmhgfc",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760018816193-j4id5ha0z",
+              "name": "gggg",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760020765348-0rtf9e16l",
+          "name": "New Workout",
+          "exercises": [],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        }
+      ]
+    },
+    {
+      "id": "2025-10-10",
+      "date": "2025-10-10",
+      "workouts": [
+        {
+          "id": "workout-1760017959752-dwbci7civ",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760018516649-s5zd1vm46",
+              "name": "asdasfff",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760020753440-yrbbvd93i",
+              "name": "asdasdasdasdasdasd",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760020808180-1ftccdf5v",
+          "name": "New Workout",
+          "exercises": [],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        }
+      ]
+    },
+    {
+      "id": "2025-10-11",
+      "date": "2025-10-11",
+      "workouts": [
+        {
+          "id": "workout-1760017954719-y6wi2bt33",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760018523146-6dy4eya6a",
+              "name": "hhhhh",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760018539819-o8kvqd8m6",
+              "name": "gdfgdfgdfgdfg",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        }
+      ]
+    },
+    {
+      "id": "2025-10-12",
+      "date": "2025-10-12",
+      "workouts": [
+        {
+          "id": "workout-1760018759201-7whv0vfsz",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760018810460-5tcp29cww",
+              "name": "g",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760018774490-h2nn4b9gr",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760018783366-kq3zxsh9j",
+              "name": "asdasdasdasd",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760017968737-jxyt4n8ht",
+          "name": "New Workout",
+          "exercises": [
+            {
+              "id": "exercise-1760018509641-m5bzljoxd",
+              "name": "asdasd",
+              "sets": 3,
+              "weight": 0,
+              "reps": 10,
+              "type": "strength"
+            }
+          ],
+          "duration": 60,
+          "difficulty": "intermediate",
+          "color": "#5A57CB"
+        }
+      ]
+    }
+  ]
+}

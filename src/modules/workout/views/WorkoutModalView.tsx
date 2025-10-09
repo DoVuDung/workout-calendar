@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Workout, Exercise } from '@/types';
 import { useDrag, useDrop } from 'react-dnd';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { MdAdd, MdDelete, MdClose } from 'react-icons/md';
 import { AddExerciseFormView } from './AddExerciseFormView';
 import { ExerciseItemView } from './ExerciseItemView';
@@ -17,6 +19,7 @@ interface WorkoutModalViewProps {
   onUpdate: (workout: Workout) => void;
   onDelete: (workoutId: string) => void;
   onExerciseDrop: (exerciseId: string, targetWorkoutId: string, targetIndex: number) => void;
+  isNewWorkout?: boolean;
 }
 
 export function WorkoutModalView({
@@ -25,7 +28,9 @@ export function WorkoutModalView({
   onUpdate,
   onDelete,
   onExerciseDrop,
+  isNewWorkout = false,
 }: WorkoutModalViewProps) {
+  console.log('WorkoutModalView rendered with isNewWorkout:', isNewWorkout, 'workout:', workout);
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [workoutData, setWorkoutData] = useState(workout);
 
@@ -44,6 +49,8 @@ export function WorkoutModalView({
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this workout?')) {
       onDelete(workout.id);
+    } else {
+      console.error('User cancelled deletion');
     }
   };
 
@@ -89,17 +96,23 @@ export function WorkoutModalView({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-2xl font-bold">Edit Workout</CardTitle>
+          <CardTitle className="text-xl font-bold">
+            {isNewWorkout ? 'Add New Workout' : 'Edit Workout'}
+          </CardTitle>
           <div className="flex items-center space-x-2">
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={handleDelete}
-              className="h-8 w-8 "
-              type="button"
-            >
-              <MdDelete className="h-4 w-4 text-red-600" />
-            </Button>
+            {!isNewWorkout && (
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleDelete}
+                className="h-8 w-8 hover:bg-red-50 border border-red-200"
+                type="button"
+                title="Delete workout"
+                style={{ zIndex: 1000 }}
+              >
+                <MdDelete className="h-4 w-4 text-red-600" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
@@ -173,18 +186,20 @@ export function WorkoutModalView({
               />
             )}
 
-            <div className="space-y-3">
-              {workoutData.exercises.map((exercise, index) => (
-                <ExerciseItemView
-                  key={exercise.id}
-                  exercise={exercise}
-                  index={index}
-                  onUpdate={(updatedExercise) => handleUpdateExercise(exercise.id, updatedExercise)}
-                  onDelete={() => handleDeleteExercise(exercise.id)}
-                  onMove={(targetIndex) => handleMoveExercise(exercise.id, targetIndex)}
-                />
-              ))}
-            </div>
+            <DndProvider backend={HTML5Backend}>
+              <div className="space-y-3">
+                {workoutData.exercises.map((exercise, index) => (
+                  <ExerciseItemView
+                    key={exercise.id}
+                    exercise={exercise}
+                    index={index}
+                    onUpdate={(updatedExercise) => handleUpdateExercise(exercise.id, updatedExercise)}
+                    onDelete={() => handleDeleteExercise(exercise.id)}
+                    onMove={handleMoveExercise}
+                  />
+                ))}
+              </div>
+            </DndProvider>
           </div>
 
           {/* Action Buttons */}
@@ -197,7 +212,7 @@ export function WorkoutModalView({
               className="color-black"
               type="button"
             >
-              Save Workout
+              {isNewWorkout ? 'Create Workout' : 'Save Workout'}
             </Button>
           </div>
         </CardContent>

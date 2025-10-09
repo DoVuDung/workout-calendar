@@ -30,6 +30,11 @@ export function WorkoutModal({
   const [editedWorkout, setEditedWorkout] = useState<Workout>(workout);
   const [showAddExercise, setShowAddExercise] = useState(false);
 
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
   const handleExerciseDrop = (
     activeExerciseId: string,
     overExerciseId: string
@@ -101,8 +106,8 @@ export function WorkoutModal({
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center space-x-3">
             <div className={`w-4 h-4 rounded-full ${workout.color}`}></div>
-            <h2 className="text-xl font-bold text-foreground">
-              {workout.name}
+            <h2 className="text-xl font-bold text-foreground" title={workout.name}>
+              {truncateText(workout.name, 30)}
             </h2>
             <span
               className={`px-2 py-1 rounded-full text-[13px] font-medium border ${getDifficultyColor(workout.difficulty)}`}
@@ -176,7 +181,7 @@ export function WorkoutModal({
                 onClick={() => setShowAddExercise(true)}
                 className="flex items-center space-x-2"
               >
-                <MdAdd className="text-black" />
+                <MdAdd className="text-white" />
                 <span>Add Exercise</span>
               </Button>
             </div>

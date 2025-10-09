@@ -5,14 +5,14 @@ import { useDrag, useDrop } from 'react-dnd';
 import { Exercise } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { EditExerciseForm } from './EditExerciseForm';
 import {
   MdDragIndicator,
   MdEdit,
   MdDelete,
-  MdCheck,
-  MdClose,
+  MdFitnessCenter,
+  MdDirectionsRun,
+  MdSelfImprovement,
 } from 'react-icons/md';
 
 interface ExerciseItemProps {
@@ -29,7 +29,6 @@ export function ExerciseItem({
   onDrop,
 }: ExerciseItemProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedExercise, setEditedExercise] = useState<Exercise>(exercise);
 
   const [{ isDragging }, drag] = useDrag({
     type: 'exercise',
@@ -51,14 +50,30 @@ export function ExerciseItem({
     }),
   });
 
-  const handleSave = () => {
-    onUpdate(editedExercise);
-    setIsEditing(false);
+  const handleEdit = () => {
+    setIsEditing(true);
   };
 
   const handleCancel = () => {
-    setEditedExercise(exercise);
     setIsEditing(false);
+  };
+
+  const handleSave = (updatedExercise: Exercise) => {
+    onUpdate(updatedExercise);
+    setIsEditing(false);
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'strength':
+        return <MdFitnessCenter className="w-4 h-4" />;
+      case 'cardio':
+        return <MdDirectionsRun className="w-4 h-4" />;
+      case 'flexibility':
+        return <MdSelfImprovement className="w-4 h-4" />;
+      default:
+        return <MdFitnessCenter className="w-4 h-4" />;
+    }
   };
 
   const getTypeColor = (type: string) => {
@@ -74,107 +89,26 @@ export function ExerciseItem({
     }
   };
 
+  const getTypeButtonColor = (type: string) => {
+    switch (type) {
+      case 'strength':
+        return 'border-red-200 bg-red-50 text-red-700 hover:bg-red-100';
+      case 'cardio':
+        return 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100';
+      case 'flexibility':
+        return 'border-green-200 bg-green-50 text-green-700 hover:bg-green-100';
+      default:
+        return 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100';
+    }
+  };
+
   if (isEditing) {
     return (
-      <Card className="p-4">
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <Label htmlFor="exercise-name">Exercise Name</Label>
-            <Input
-              id="exercise-name"
-              type="text"
-              value={editedExercise.name}
-              onChange={e =>
-                setEditedExercise({
-                  ...editedExercise,
-                  name: e.target.value,
-                })
-              }
-            />
-          </div>
-          <div>
-            <Label htmlFor="exercise-type">Type</Label>
-            <select
-              id="exercise-type"
-              value={editedExercise.type}
-              onChange={e =>
-                setEditedExercise({
-                  ...editedExercise,
-                  type: e.target.value as 'strength' | 'cardio' | 'flexibility',
-                })
-              }
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-[13px] ring-offset-background file:border-0 file:bg-transparent file:text-[13px] file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <option value="strength">Strength</option>
-              <option value="cardio">Cardio</option>
-              <option value="flexibility">Flexibility</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div>
-            <Label htmlFor="exercise-sets">Sets</Label>
-            <Input
-              id="exercise-sets"
-              type="number"
-              value={editedExercise.sets}
-              onChange={e =>
-                setEditedExercise({
-                  ...editedExercise,
-                  sets: parseInt(e.target.value) || 0,
-                })
-              }
-            />
-          </div>
-          <div>
-            <Label htmlFor="exercise-reps">Reps</Label>
-            <Input
-              id="exercise-reps"
-              type="number"
-              value={editedExercise.reps}
-              onChange={e =>
-                setEditedExercise({
-                  ...editedExercise,
-                  reps: parseInt(e.target.value) || 0,
-                })
-              }
-            />
-          </div>
-          <div>
-            <Label htmlFor="exercise-value">
-              {editedExercise.type === 'cardio'
-                ? 'Duration (min)'
-                : 'Weight (lbs)'}
-            </Label>
-            <Input
-              id="exercise-value"
-              type="number"
-              value={
-                editedExercise.type === 'cardio'
-                  ? editedExercise.duration || 0
-                  : editedExercise.weight || 0
-              }
-              onChange={e =>
-                setEditedExercise({
-                  ...editedExercise,
-                  [editedExercise.type === 'cardio' ? 'duration' : 'weight']:
-                    parseInt(e.target.value) || 0,
-                })
-              }
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center justify-end space-x-2">
-          <Button variant="ghost" size="icon" onClick={handleCancel}>
-            <MdClose className="w-4 h-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={handleSave}>
-            <MdCheck className="w-4 h-4" />
-          </Button>
-        </div>
-      </Card>
+      <EditExerciseForm
+        exercise={exercise}
+        onSave={handleSave}
+        onCancel={handleCancel}
+      />
     );
   }
 
@@ -196,24 +130,38 @@ export function ExerciseItem({
           <MdDragIndicator className="w-4 h-4 text-muted-foreground" />
         </div>
 
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="font-semibold text-foreground">{exercise.name}</h4>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-2 min-w-0 flex-1">
+              {getTypeIcon(exercise.type)}
+              <h4 className="font-semibold text-foreground truncate" title={exercise.name}>
+                {exercise.name}
+              </h4>
+            </div>
             <span
-              className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(exercise.type)}`}
+              className={`px-3 py-1 rounded-full text-xs font-medium ${getTypeColor(exercise.type)}`}
             >
               {exercise.type}
             </span>
           </div>
 
-          <div className="flex items-center space-x-4 text-[13px] text-muted-foreground">
-            <span>{exercise.sets} sets</span>
-            <span>{exercise.reps} reps</span>
-            {exercise.type === 'cardio' ? (
-              <span>{exercise.duration} min</span>
-            ) : (
-              <span>{exercise.weight} lbs</span>
-            )}
+          <div className="grid grid-cols-3 gap-4 text-sm">
+            <div className="flex flex-col">
+              <span className="text-muted-foreground text-xs">Sets</span>
+              <span className="font-medium">{exercise.sets}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-muted-foreground text-xs">Reps</span>
+              <span className="font-medium">{exercise.reps}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-muted-foreground text-xs">
+                {exercise.type === 'cardio' ? 'Duration' : 'Weight'}
+              </span>
+              <span className="font-medium">
+                {exercise.type === 'cardio' ? `${exercise.duration} min` : `${exercise.weight} lbs`}
+              </span>
+            </div>
           </div>
         </div>
 

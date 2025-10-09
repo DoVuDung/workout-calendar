@@ -10,5 +10,7 @@ export {
   useUpdateWorkout, 
   useDeleteWorkout, 
   useMoveWorkout,
+  useReorderWorkout,
+  useMoveExercise,
   workoutKeys 
-} from './queries/useWorkoutData';
+} from './queries';

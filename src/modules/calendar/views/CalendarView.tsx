@@ -7,14 +7,18 @@ interface CalendarViewProps {
   days: Day[];
   onWorkoutClick: (workout: Workout) => void;
   onWorkoutDrop: (workoutId: string, targetDayId: string) => void;
+  onWorkoutReorder: (dayId: string, activeWorkoutId: string, overWorkoutId: string) => void;
   onAddWorkout: (dayId: string) => void;
+  onMoveWorkout: (workoutId: string) => void;
 }
 
 export function CalendarView({
   days,
   onWorkoutClick,
   onWorkoutDrop,
+  onWorkoutReorder,
   onAddWorkout,
+  onMoveWorkout,
 }: CalendarViewProps) {
   const weekDays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
@@ -34,7 +38,7 @@ export function CalendarView({
         </div>
 
         {/* Calendar Grid */}
-        <div className="grid grid-cols-7 gap-4 min-h-[600px]">
+        <div className="grid grid-cols-7 gap-4 min-h-[600px] items-stretch">
           {days.map((day, index) => (
             <DayColumnView
               key={day.date}
@@ -42,7 +46,9 @@ export function CalendarView({
               dayName={weekDays[index]}
               onWorkoutClick={onWorkoutClick}
               onWorkoutDrop={onWorkoutDrop}
+              onWorkoutReorder={onWorkoutReorder}
               onAddWorkout={onAddWorkout}
+              onMoveWorkout={onMoveWorkout}
             />
           ))}
         </div>
@@ -57,7 +63,9 @@ export function CalendarView({
             dayName={weekDays[index]}
             onWorkoutClick={onWorkoutClick}
             onWorkoutDrop={onWorkoutDrop}
+            onWorkoutReorder={onWorkoutReorder}
             onAddWorkout={onAddWorkout}
+            onMoveWorkout={onMoveWorkout}
           />
         ))}
       </div>

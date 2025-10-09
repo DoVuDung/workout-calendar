@@ -12,6 +12,7 @@ interface DayColumnProps {
   dayName: string;
   onWorkoutClick: (workout: Workout) => void;
   onWorkoutDrop: (workoutId: string, targetDayId: string) => void;
+  onWorkoutReorder: (dayId: string, activeWorkoutId: string, overWorkoutId: string) => void;
   onAddWorkout: (dayId: string) => void;
 }
 
@@ -20,6 +21,7 @@ export function DayColumn({
   dayName,
   onWorkoutClick,
   onWorkoutDrop,
+  onWorkoutReorder,
   onAddWorkout,
 }: DayColumnProps) {
   const [{ isOver }, drop] = useDrop({
@@ -31,6 +33,10 @@ export function DayColumn({
       isOver: monitor.isOver(),
     }),
   });
+
+  const handleWorkoutReorder = (activeWorkoutId: string, overWorkoutId: string) => {
+    onWorkoutReorder(day.date, activeWorkoutId, overWorkoutId);
+  };
 
   const date = new Date(day.date);
   const dayNumber = date.getDate();
@@ -83,6 +89,7 @@ export function DayColumn({
             key={workout.id}
             workout={workout}
             onClick={() => onWorkoutClick(workout)}
+            onWorkoutReorder={handleWorkoutReorder}
           />
         ))}
       </div>

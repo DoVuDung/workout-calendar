@@ -12,7 +12,9 @@ interface DayColumnViewProps {
   dayName: string;
   onWorkoutClick: (workout: Workout) => void;
   onWorkoutDrop: (workoutId: string, targetDayId: string) => void;
+  onWorkoutReorder: (dayId: string, activeWorkoutId: string, overWorkoutId: string) => void;
   onAddWorkout: (dayId: string) => void;
+  onMoveWorkout: (workoutId: string) => void;
 }
 
 export function DayColumnView({
@@ -20,7 +22,9 @@ export function DayColumnView({
   dayName,
   onWorkoutClick,
   onWorkoutDrop,
+  onWorkoutReorder,
   onAddWorkout,
+  onMoveWorkout,
 }: DayColumnViewProps) {
   const [{ isOver }, drop] = useDrop({
     accept: 'workout',
@@ -32,16 +36,24 @@ export function DayColumnView({
     }),
   });
 
+  const handleWorkoutReorder = (activeWorkoutId: string, overWorkoutId: string) => {
+    onWorkoutReorder(day.date, activeWorkoutId, overWorkoutId);
+  };
+
   const date = new Date(day.date);
   const dayNumber = date.getDate();
   const isToday = date.toDateString() === new Date().toDateString();
   const isCurrentMonth = date.getMonth() === new Date().getMonth();
+  
+  // Define maximum workouts per day
+  const MAX_WORKOUTS_PER_DAY = 5;
+  const isDayFull = day.workouts.length >= MAX_WORKOUTS_PER_DAY;
 
   return (
     <div
       ref={drop as any}
       className={`
-        relative w-full lg:h-[757px] h-auto bg-[#F3F5F8] rounded-lg
+        relative w-full h-full bg-[#F3F5F8] rounded-lg flex flex-col
         ${isOver ? 'bg-accent/50' : ''}
         ${!isCurrentMonth ? 'bg-muted/50 text-muted-foreground' : ''}
       `}
@@ -66,25 +78,44 @@ export function DayColumnView({
         <Button
           size="icon"
           variant="ghost"
-          className="rounded-full w-6 h-6 bg-gray-300 hover:bg-gray-400 p-0"
+          className={`rounded-full w-6 h-6 p-0 ${
+            isDayFull 
+              ? 'bg-gray-200 cursor-not-allowed opacity-50' 
+              : 'bg-gray-300 hover:bg-gray-400'
+          }`}
+          disabled={isDayFull}
           onClick={(e) => {
             e.stopPropagation();
-            onAddWorkout(day.date);
+            if (!isDayFull) {
+              onAddWorkout(day.date);
+            }
           }}
+          title={isDayFull ? `Maximum ${MAX_WORKOUTS_PER_DAY} workouts per day` : 'Add workout'}
         >
           <MdAdd className="w-3 h-3 text-white" />
         </Button>
       </div>
 
       {/* Content Area */}
-      <div className="p-3 space-y-3 lg:flex-1 lg:overflow-y-auto">
+      <div className="p-3 space-y-3 flex-1 overflow-y-auto">
         {day.workouts.map(workout => (
           <WorkoutCardView
             key={workout.id}
             workout={workout}
             onClick={() => onWorkoutClick(workout)}
+            onWorkoutReorder={handleWorkoutReorder}
+            onMoveWorkout={onMoveWorkout}
           />
         ))}
+        
+        {/* Show full day indicator */}
+        {isDayFull && (
+          <div className="text-center py-2">
+            <div className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 inline-block">
+              Day Full ({day.workouts.length}/{MAX_WORKOUTS_PER_DAY})
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

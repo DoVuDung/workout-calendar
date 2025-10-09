@@ -6,26 +6,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Exercise } from '@/types';
 import { useState } from 'react';
-import { MdAdd, MdClose, MdFitnessCenter, MdDirectionsRun, MdSelfImprovement } from 'react-icons/md';
+import { MdEdit, MdClose, MdFitnessCenter, MdDirectionsRun, MdSelfImprovement } from 'react-icons/md';
 
-interface AddExerciseFormProps {
-  onAdd: (exercise: Exercise) => void;
+interface EditExerciseFormProps {
+  exercise: Exercise;
+  onSave: (exercise: Exercise) => void;
   onCancel: () => void;
-  title?: string;
-  submitButtonText?: string;
 }
 
-export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", submitButtonText = "Add Exercise" }: AddExerciseFormProps) {
+export function EditExerciseForm({ exercise, onSave, onCancel }: EditExerciseFormProps) {
   const [formData, setFormData] = useState({
-    name: '',
-    type: 'strength' as 'strength' | 'cardio' | 'flexibility',
-    sets: 3,
-    reps: 10,
-    weight: 0,
-    duration: 0,
+    name: exercise.name,
+    type: exercise.type,
+    sets: exercise.sets,
+    reps: exercise.reps,
+    weight: exercise.weight || 0,
+    duration: exercise.duration || 0,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -61,11 +60,11 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
       return;
     }
 
-    setIsSubmitting(true);
+    setIsSaving(true);
 
     try {
-      const exercise: Exercise = {
-        id: `exercise-${Date.now()}`,
+      const updatedExercise: Exercise = {
+        ...exercise,
         name: formData.name.trim(),
         type: formData.type,
         sets: formData.sets,
@@ -75,20 +74,9 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
           : { weight: formData.weight }),
       };
 
-      onAdd(exercise);
-
-      // Reset form
-      setFormData({
-        name: '',
-        type: 'strength',
-        sets: 3,
-        reps: 10,
-        weight: 0,
-        duration: 0,
-      });
-      setErrors({});
+      onSave(updatedExercise);
     } finally {
-      setIsSubmitting(false);
+      setIsSaving(false);
     }
   };
 
@@ -105,7 +93,7 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
     }
   };
 
-  const getTypeColor = (type: string) => {
+  const getTypeButtonColor = (type: string) => {
     switch (type) {
       case 'strength':
         return 'border-red-200 bg-red-50 text-red-700 hover:bg-red-100';
@@ -119,13 +107,13 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
   };
 
   return (
-    <Card className="p-6 border-2 border-dashed border-primary/20 bg-gradient-to-br from-background to-muted/20">
+    <Card className="p-6 border-2 border-primary/30 bg-gradient-to-br from-background to-primary/5">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
           <div className="p-2 rounded-lg bg-primary/10">
-            <MdAdd className="w-5 h-5 text-primary" />
+            <MdEdit className="w-5 h-5 text-primary" />
           </div>
-          <h4 className="text-lg font-semibold text-foreground">{title}</h4>
+          <h4 className="text-lg font-semibold text-foreground">Edit Exercise</h4>
         </div>
         <Button 
           variant="ghost" 
@@ -140,11 +128,11 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Exercise Name */}
         <div className="space-y-2">
-          <Label htmlFor="add-exercise-name" className="text-sm font-medium">
+          <Label htmlFor="edit-exercise-name" className="text-sm font-medium">
             Exercise Name
           </Label>
           <Input
-            id="add-exercise-name"
+            id="edit-exercise-name"
             type="text"
             value={formData.name}
             onChange={e => {
@@ -179,7 +167,7 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
                 className={`
                   flex flex-col items-center space-y-2 p-4 rounded-lg border-2 transition-all duration-200
                   ${formData.type === type 
-                    ? `${getTypeColor(type)} border-current shadow-md scale-105` 
+                    ? `${getTypeButtonColor(type)} border-current shadow-md scale-105` 
                     : 'border-border bg-background hover:bg-muted'
                   }
                 `}
@@ -194,11 +182,11 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
         {/* Sets and Reps */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="add-exercise-sets" className="text-sm font-medium">
+            <Label htmlFor="edit-exercise-sets" className="text-sm font-medium">
               Sets
             </Label>
             <Input
-              id="add-exercise-sets"
+              id="edit-exercise-sets"
               type="number"
               value={formData.sets}
               onChange={e => {
@@ -221,11 +209,11 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="add-exercise-reps" className="text-sm font-medium">
+            <Label htmlFor="edit-exercise-reps" className="text-sm font-medium">
               Reps
             </Label>
             <Input
-              id="add-exercise-reps"
+              id="edit-exercise-reps"
               type="number"
               value={formData.reps}
               onChange={e => {
@@ -251,11 +239,11 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
 
         {/* Weight/Duration */}
         <div className="space-y-2">
-          <Label htmlFor="add-exercise-value" className="text-sm font-medium">
+          <Label htmlFor="edit-exercise-value" className="text-sm font-medium">
             {formData.type === 'cardio' ? 'Duration (minutes)' : 'Weight (lbs)'}
           </Label>
           <Input
-            id="add-exercise-value"
+            id="edit-exercise-value"
             type="number"
             value={
               formData.type === 'cardio' ? formData.duration : formData.weight
@@ -296,15 +284,15 @@ export function AddExerciseForm({ onAdd, onCancel, title = "Add New Exercise", s
           </Button>
           <Button 
             type="submit" 
-            disabled={isSubmitting}
-            className="flex items-center space-x-2 bg-white hover:bg-gray-100 text-gray-800 border-2 border-gray-300 hover:border-gray-500 shadow-sm hover:shadow-md min-h-[40px] px-6 font-medium"
+            disabled={isSaving}
+            className="flex items-center space-x-2 bg-primary hover:bg-primary/90 text-primary-foreground min-h-[40px] px-6"
           >
-            {isSubmitting ? (
+            {isSaving ? (
               <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : (
-              <MdAdd className="w-4 h-4" />
+              <MdEdit className="w-4 h-4" />
             )}
-            <span>{isSubmitting ? 'Saving...' : submitButtonText}</span>
+            <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
           </Button>
         </div>
       </form>

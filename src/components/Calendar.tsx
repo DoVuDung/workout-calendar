@@ -7,6 +7,7 @@ interface CalendarProps {
   days: Day[];
   onWorkoutClick: (workout: Workout) => void;
   onWorkoutDrop: (workoutId: string, targetDayId: string) => void;
+  onWorkoutReorder: (dayId: string, activeWorkoutId: string, overWorkoutId: string) => void;
   onAddWorkout: (dayId: string) => void;
 }
 
@@ -14,6 +15,7 @@ export function Calendar({
   days,
   onWorkoutClick,
   onWorkoutDrop,
+  onWorkoutReorder,
   onAddWorkout,
 }: CalendarProps) {
   const weekDays = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -42,6 +44,7 @@ export function Calendar({
               dayName={weekDays[index]}
               onWorkoutClick={onWorkoutClick}
               onWorkoutDrop={onWorkoutDrop}
+              onWorkoutReorder={onWorkoutReorder}
               onAddWorkout={onAddWorkout}
             />
           ))}
@@ -57,6 +60,7 @@ export function Calendar({
             dayName={weekDays[index]}
             onWorkoutClick={onWorkoutClick}
             onWorkoutDrop={onWorkoutDrop}
+            onWorkoutReorder={onWorkoutReorder}
             onAddWorkout={onAddWorkout}
           />
         ))}

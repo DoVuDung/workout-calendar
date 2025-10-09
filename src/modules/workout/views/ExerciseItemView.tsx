@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Exercise } from '@/types';
-import { useDrag } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { MdDelete, MdMoreVert } from 'react-icons/md';
 
 interface ExerciseItemViewProps {
@@ -13,7 +13,7 @@ interface ExerciseItemViewProps {
   index: number;
   onUpdate: (exercise: Exercise) => void;
   onDelete: () => void;
-  onMove: (targetIndex: number) => void;
+  onMove: (exerciseId: string, targetIndex: number) => void;
 }
 
 export function ExerciseItemView({
@@ -31,6 +31,18 @@ export function ExerciseItemView({
     item: { id: exercise.id, index },
     collect: monitor => ({
       isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [{ isOver }, drop] = useDrop({
+    accept: 'exercise',
+    drop: (item: { id: string, index: number }) => {
+      if (item.id !== exercise.id) {
+        onMove(item.id, index);
+      }
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
     }),
   });
 
@@ -104,16 +116,22 @@ export function ExerciseItemView({
 
   return (
     <div
-      ref={drag as any}
+      ref={node => {
+        (drag as any)(node);
+        (drop as any)(node);
+      }}
       className={`
         border border-gray-200 rounded-lg p-4 flex items-center justify-between bg-white
         ${isDragging ? 'opacity-50' : 'hover:bg-gray-50'}
+        ${isOver ? 'bg-blue-50 border-blue-300' : ''}
       `}
     >
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-3 min-w-0 flex-1">
         <MdMoreVert className="text-gray-400 cursor-move" />
-        <div>
-          <h4 className="font-semibold text-sm">{exercise.name}</h4>
+        <div className="min-w-0 flex-1">
+          <h4 className="font-semibold text-sm truncate" title={exercise.name}>
+            {exercise.name}
+          </h4>
           <p className="text-sm text-gray-600">
             {exercise.sets} sets × {exercise.weight} lb × {exercise.reps} reps
           </p>

@@ -103,7 +103,7 @@ export function AddExerciseFormView({ onAdd, onCancel }: AddExerciseFormViewProp
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" className="text-black">
+        <Button type="submit" className="text-white">
           Add Exercise
         </Button>
       </div>

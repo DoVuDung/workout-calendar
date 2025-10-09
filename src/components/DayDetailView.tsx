@@ -7,11 +7,12 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { MdAdd, MdMoreHoriz } from 'react-icons/md';
 import { AddExerciseForm } from './AddExerciseForm';
+import { ExerciseItem } from './ExerciseItem';
 
 interface DayDetailViewProps {
   day: Day;
   onWorkoutUpdate: (workout: Workout) => void;
-  onExerciseDrop: (activeExerciseId: string, overExerciseId: string) => void;
+  onExerciseDrop: (activeExerciseId: string, overExerciseId: string, workoutId: string) => void;
 }
 
 export function DayDetailView({
@@ -71,25 +72,7 @@ export function DayDetailView({
     overExerciseId: string
   ) => {
     if (selectedWorkout) {
-      const activeIndex = selectedWorkout.exercises.findIndex(
-        ex => ex.id === activeExerciseId
-      );
-      const overIndex = selectedWorkout.exercises.findIndex(
-        ex => ex.id === overExerciseId
-      );
-
-      if (activeIndex !== -1 && overIndex !== -1) {
-        const newExercises = [...selectedWorkout.exercises];
-        const [movedExercise] = newExercises.splice(activeIndex, 1);
-        newExercises.splice(overIndex, 0, movedExercise);
-
-        const updatedWorkout = {
-          ...selectedWorkout,
-          exercises: newExercises,
-        };
-        onWorkoutUpdate(updatedWorkout);
-        setSelectedWorkout(updatedWorkout);
-      }
+      onExerciseDrop(activeExerciseId, overExerciseId, selectedWorkout.id);
     }
   };
 
@@ -117,7 +100,7 @@ export function DayDetailView({
         <h1 className="text-2xl font-bold text-blue-600 mb-2">{dayName}</h1>
         <div className="flex items-center space-x-4">
           <span className="text-4xl font-bold text-gray-800">
-            {dayNumber} asdasdas
+            {dayNumber}
           </span>
         </div>
       </div>
@@ -147,33 +130,14 @@ export function DayDetailView({
           {/* Exercises */}
           <DndProvider backend={HTML5Backend}>
             <div className="space-y-3">
-              {selectedWorkout.exercises.map((exercise, index) => (
-                <div key={exercise.id} className="bg-white rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <span className="text-[13px] font-medium text-gray-700">
-                        {exercise.sets}x
-                      </span>
-                      <div>
-                        <h3 className="font-bold text-gray-800 text-lg">
-                          {exercise.name}
-                        </h3>
-                        <p className="text-[13px] text-gray-600">
-                          {formatSetInfo(exercise)}
-                        </p>
-                      </div>
-                    </div>
-                    {index === selectedWorkout.exercises.length - 1 && (
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        className="rounded-full border-blue-500"
-                      >
-                        <MdAdd className="w-4 h-4 text-blue-600" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
+              {selectedWorkout.exercises.map((exercise) => (
+                <ExerciseItem
+                  key={exercise.id}
+                  exercise={exercise}
+                  onUpdate={handleUpdateExercise}
+                  onDelete={handleDeleteExercise}
+                  onDrop={handleExerciseDrop}
+                />
               ))}
 
               {/* Add Exercise Button */}
@@ -188,7 +152,7 @@ export function DayDetailView({
                   className="w-full h-12 border-dashed border-2 border-blue-500 hover:border-blue-600 text-blue-600"
                   onClick={() => setShowAddExercise(true)}
                 >
-                  <MdAdd className="w-4 h-4 mr-2 text-black" />
+                  <MdAdd className="w-4 h-4 mr-2 text-white" />
                   Add Exercise
                 </Button>
               )}

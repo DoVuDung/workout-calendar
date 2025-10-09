@@ -1,0 +1,299 @@
+import { Day, Workout, Exercise } from '@/types';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+
+class ApiClient {
+  private baseUrl: string;
+
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
+  }
+
+  private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+  }
+
+  // Days API
+  async getDays(): Promise<Day[]> {
+    return this.request<Day[]>('/days');
+  }
+
+  async getDay(date: string): Promise<Day | null> {
+    try {
+      return await this.request<Day>(`/days/${date}`);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async updateDay(day: Day): Promise<Day> {
+    // Check if day exists first
+    const existingDay = await this.getDay(day.date);
+    
+    if (existingDay) {
+      // Update existing day using date as ID
+      return this.request<Day>(`/days/${day.date}`, {
+        method: 'PUT',
+        body: JSON.stringify(day),
+      });
+    } else {
+      // Create new day with date as ID
+      const dayWithId = {
+        id: day.date,
+        ...day,
+      };
+      return this.request<Day>('/days', {
+        method: 'POST',
+        body: JSON.stringify(dayWithId),
+      });
+    }
+  }
+
+  // Workouts API
+  async getWorkouts(dayDate: string): Promise<Workout[]> {
+    const day = await this.getDay(dayDate);
+    return day?.workouts || [];
+  }
+
+  async createWorkout(dayDate: string, workout: Omit<Workout, 'id'>): Promise<Workout> {
+    console.log('API: Creating workout for date:', dayDate, 'with workout:', workout);
+    
+    const MAX_WORKOUTS_PER_DAY = 5;
+    
+    let day = await this.getDay(dayDate);
+    console.log('API: Existing day found:', day);
+    
+    // Check if day is full
+    if (day && day.workouts.length >= MAX_WORKOUTS_PER_DAY) {
+      throw new Error(`Day ${dayDate} is full. Maximum ${MAX_WORKOUTS_PER_DAY} workouts allowed per day.`);
+    }
+    
+    const newWorkout: Workout = {
+      ...workout,
+      id: `workout-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    };
+
+    if (!day) {
+      // Create a new day if it doesn't exist
+      day = {
+        date: dayDate,
+        workouts: [],
+      };
+      console.log('API: Creating new day:', day);
+    }
+
+    const updatedDay = {
+      ...day,
+      workouts: [...day.workouts, newWorkout],
+    };
+
+    console.log('API: Updating day with new workout:', updatedDay);
+    await this.updateDay(updatedDay);
+    return newWorkout;
+  }
+
+  async updateWorkout(dayDate: string, workout: Workout): Promise<Workout> {
+    const day = await this.getDay(dayDate);
+    if (!day) {
+      throw new Error(`Day ${dayDate} not found`);
+    }
+
+    const updatedDay = {
+      ...day,
+      workouts: day.workouts.map(w => w.id === workout.id ? workout : w),
+    };
+
+    await this.updateDay(updatedDay);
+    return workout;
+  }
+
+  async deleteWorkout(dayDate: string, workoutId: string): Promise<void> {
+    console.log('API: Deleting workout', workoutId, 'from day', dayDate);
+    const day = await this.getDay(dayDate);
+    console.log('API: Day found:', day);
+    
+    if (!day) {
+      throw new Error(`Day ${dayDate} not found`);
+    }
+
+    const updatedDay = {
+      ...day,
+      workouts: day.workouts.filter(w => w.id !== workoutId),
+    };
+
+    console.log('API: Updated day after deletion:', updatedDay);
+    await this.updateDay(updatedDay);
+    console.log('API: Workout deleted successfully');
+  }
+
+  async moveWorkout(workoutId: string, fromDayDate: string, toDayDate: string): Promise<void> {
+    const fromDay = await this.getDay(fromDayDate);
+    if (!fromDay) {
+      throw new Error('Source day not found');
+    }
+
+    const workout = fromDay.workouts.find(w => w.id === workoutId);
+    if (!workout) {
+      throw new Error('Workout not found');
+    }
+
+    // Get or create target day
+    let toDay = await this.getDay(toDayDate);
+    if (!toDay) {
+      // Create new day if it doesn't exist
+      toDay = {
+        date: toDayDate,
+        workouts: [],
+      };
+    }
+
+    // Remove from source day
+    const updatedFromDay = {
+      ...fromDay,
+      workouts: fromDay.workouts.filter(w => w.id !== workoutId),
+    };
+
+    // Add to target day
+    const updatedToDay = {
+      ...toDay,
+      workouts: [...toDay.workouts, workout],
+    };
+
+    await Promise.all([
+      this.updateDay(updatedFromDay),
+      this.updateDay(updatedToDay),
+    ]);
+  }
+
+  async reorderWorkout(dayDate: string, workoutId: string, targetIndex: number): Promise<void> {
+    const day = await this.getDay(dayDate);
+    if (!day) {
+      throw new Error('Day not found');
+    }
+
+    const workoutIndex = day.workouts.findIndex(w => w.id === workoutId);
+    if (workoutIndex === -1) {
+      throw new Error('Workout not found');
+    }
+
+    // Reorder workouts within the day
+    const newWorkouts = [...day.workouts];
+    const [movedWorkout] = newWorkouts.splice(workoutIndex, 1);
+    newWorkouts.splice(targetIndex, 0, movedWorkout);
+
+    const updatedDay = {
+      ...day,
+      workouts: newWorkouts,
+    };
+
+    await this.updateDay(updatedDay);
+  }
+
+  // Exercises API
+  async addExercise(dayDate: string, workoutId: string, exercise: Omit<Exercise, 'id'>): Promise<Exercise> {
+    const newExercise: Exercise = {
+      ...exercise,
+      id: `exercise-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    };
+
+    const day = await this.getDay(dayDate);
+    if (!day) {
+      throw new Error(`Day ${dayDate} not found`);
+    }
+
+    const workout = day.workouts.find(w => w.id === workoutId);
+    if (!workout) {
+      throw new Error(`Workout ${workoutId} not found`);
+    }
+
+    const updatedWorkout = {
+      ...workout,
+      exercises: [...workout.exercises, newExercise],
+    };
+
+    await this.updateWorkout(dayDate, updatedWorkout);
+    return newExercise;
+  }
+
+  async updateExercise(dayDate: string, workoutId: string, exercise: Exercise): Promise<Exercise> {
+    const day = await this.getDay(dayDate);
+    if (!day) {
+      throw new Error(`Day ${dayDate} not found`);
+    }
+
+    const workout = day.workouts.find(w => w.id === workoutId);
+    if (!workout) {
+      throw new Error(`Workout ${workoutId} not found`);
+    }
+
+    const updatedWorkout = {
+      ...workout,
+      exercises: workout.exercises.map(ex => ex.id === exercise.id ? exercise : ex),
+    };
+
+    await this.updateWorkout(dayDate, updatedWorkout);
+    return exercise;
+  }
+
+  async deleteExercise(dayDate: string, workoutId: string, exerciseId: string): Promise<void> {
+    const day = await this.getDay(dayDate);
+    if (!day) {
+      throw new Error(`Day ${dayDate} not found`);
+    }
+
+    const workout = day.workouts.find(w => w.id === workoutId);
+    if (!workout) {
+      throw new Error(`Workout ${workoutId} not found`);
+    }
+
+    const updatedWorkout = {
+      ...workout,
+      exercises: workout.exercises.filter(ex => ex.id !== exerciseId),
+    };
+
+    await this.updateWorkout(dayDate, updatedWorkout);
+  }
+
+  async moveExercise(dayDate: string, workoutId: string, exerciseId: string, targetIndex: number): Promise<void> {
+    const day = await this.getDay(dayDate);
+    if (!day) {
+      throw new Error(`Day ${dayDate} not found`);
+    }
+
+    const workout = day.workouts.find(w => w.id === workoutId);
+    if (!workout) {
+      throw new Error(`Workout ${workoutId} not found`);
+    }
+
+    const exerciseIndex = workout.exercises.findIndex(ex => ex.id === exerciseId);
+    if (exerciseIndex === -1) {
+      throw new Error(`Exercise ${exerciseId} not found`);
+    }
+
+    const newExercises = [...workout.exercises];
+    const [movedExercise] = newExercises.splice(exerciseIndex, 1);
+    newExercises.splice(targetIndex, 0, movedExercise);
+
+    const updatedWorkout = {
+      ...workout,
+      exercises: newExercises,
+    };
+
+    await this.updateWorkout(dayDate, updatedWorkout);
+  }
+}
+
+export const apiClient = new ApiClient(API_BASE_URL);

@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Day } from '@/types';
+import { apiClient } from '@/lib/api';
 import { generateCalendarData } from '@/utils/calendarUtils';
 
 // Query keys
@@ -13,7 +14,42 @@ export const calendarKeys = {
 export function useCalendarData(currentDate: Date) {
   return useQuery({
     queryKey: calendarKeys.week(currentDate),
-    queryFn: () => generateCalendarData(currentDate),
+    queryFn: async () => {
+      try {
+        // Try to fetch from API first
+        const apiDays = await apiClient.getDays();
+        
+        // Filter to current week
+        const startOfWeek = new Date(currentDate);
+        const dayOfWeek = startOfWeek.getDay();
+        const diff = startOfWeek.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+        startOfWeek.setDate(diff);
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+        const currentWeekDays = apiDays.filter(day => {
+          const dayDate = new Date(day.date);
+          return dayDate >= startOfWeek && dayDate <= endOfWeek;
+        });
+
+        // Always generate a complete week (7 days) and merge with API data
+        const completeWeek = generateCalendarData(currentDate);
+        
+        // Merge API data with generated week
+        const mergedWeek = completeWeek.map(day => {
+          const apiDay = currentWeekDays.find(apiDay => apiDay.date === day.date);
+          return apiDay || day; // Use API data if available, otherwise use generated (empty) day
+        });
+
+        return mergedWeek;
+      } catch (error) {
+        console.warn('Failed to fetch from API, falling back to generated data:', error);
+      }
+      
+      // Fallback to generated data (empty days)
+      return generateCalendarData(currentDate, false);
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
@@ -39,11 +75,22 @@ export function useUpdateCalendarData() {
 export function useDayData(date: string) {
   return useQuery({
     queryKey: calendarKeys.day(date),
-    queryFn: () => {
-      // In a real app, this would fetch from API
-      const dayData = generateCalendarData(new Date(date)).find(day => day.date === date);
+    queryFn: async () => {
+      try {
+        // Try to fetch from API first
+        const dayData = await apiClient.getDay(date);
+        if (dayData) {
+          return dayData;
+        }
+      } catch (error) {
+        console.warn('Failed to fetch day from API, falling back to generated data:', error);
+      }
+      
+      // Fallback to generated data (empty day)
+      const dayData = generateCalendarData(new Date(date), false).find(day => day.date === date);
       return dayData;
     },
     enabled: !!date,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
