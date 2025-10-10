@@ -57,19 +57,19 @@
           "name": "Upper Body Strength",
           "exercises": [
             {
-              "id": "exercise-1760055169583-4",
-              "name": "Bench Press",
-              "sets": 4,
-              "weight": 135,
-              "reps": 8,
-              "type": "strength"
-            },
-            {
               "id": "exercise-1760055169583-5",
               "name": "Pull-ups",
               "sets": 3,
               "weight": 0,
               "reps": 10,
+              "type": "strength"
+            },
+            {
+              "id": "exercise-1760055169583-4",
+              "name": "Bench Press",
+              "sets": 4,
+              "weight": 135,
+              "reps": 8,
               "type": "strength"
             },
             {

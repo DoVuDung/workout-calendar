@@ -87,3 +87,36 @@ To start the production server:
 ```bash
 bun run start
 ```
+
+## Deployment
+
+### Vercel Deployment
+
+This application is configured for easy deployment on Vercel:
+
+1. **Automatic API Routes**: The app uses Next.js API routes in production, so no external API server is needed
+2. **Environment Configuration**: 
+   - Local development: Uses JSON server on `localhost:3002`
+   - Production: Uses Next.js API routes at `/api`
+3. **Database**: Uses `db.json` file for data persistence
+
+#### Deploy to Vercel:
+
+1. Connect your GitHub repository to Vercel
+2. Vercel will automatically detect Next.js and configure the build
+3. No additional environment variables needed - the app automatically uses API routes in production
+4. Your app will be available at `https://your-app-name.vercel.app`
+
+#### Local Development:
+
+For local development, you can still use the JSON server:
+
+```bash
+# Terminal 1: Start JSON server
+npm run server
+
+# Terminal 2: Start Next.js dev server
+npm run dev
+```
+
+The app will automatically detect the environment and use the appropriate API endpoint.
