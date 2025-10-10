@@ -4,6 +4,7 @@ import { calendarKeys } from '../../calendar/queries/useCalendarData';
 import { apiClient } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { workoutKeys } from './useWorkoutQueries';
+import { forceRefreshCalendarData } from '@/utils/cacheUtils';
 
 // Update workout (PUT)
 export function useUpdateWorkout() {
@@ -57,12 +58,8 @@ export function useMoveWorkout() {
       return { workoutId, fromDayId, toDayId };
     },
     onSuccess: () => {
-      // Invalidate all workout lists to ensure consistency
-      queryClient.invalidateQueries({ queryKey: workoutKeys.all });
-      // Also invalidate calendar data to sync with day views
-      queryClient.invalidateQueries({ queryKey: calendarKeys.all });
-      // Force refetch of calendar data
-      queryClient.refetchQueries({ queryKey: calendarKeys.all });
+      // Use aggressive cache refresh utility
+      forceRefreshCalendarData(queryClient);
       
       toast({
         title: "Workout Moved",
@@ -99,12 +96,8 @@ export function useReorderWorkout() {
       return { dayDate, workoutId, targetIndex };
     },
     onSuccess: () => {
-      // Invalidate all workout lists to ensure consistency
-      queryClient.invalidateQueries({ queryKey: workoutKeys.all });
-      // Also invalidate calendar data to sync with day views
-      queryClient.invalidateQueries({ queryKey: calendarKeys.all });
-      // Force refetch of calendar data
-      queryClient.refetchQueries({ queryKey: calendarKeys.all });
+      // Use aggressive cache refresh utility
+      forceRefreshCalendarData(queryClient);
       
       toast({
         title: "Workout Reordered",
@@ -143,12 +136,8 @@ export function useMoveExercise() {
       return { dayDate, workoutId, exerciseId, targetIndex };
     },
     onSuccess: () => {
-      // Invalidate all workout lists to ensure consistency
-      queryClient.invalidateQueries({ queryKey: workoutKeys.all });
-      // Also invalidate calendar data to sync with day views
-      queryClient.invalidateQueries({ queryKey: calendarKeys.all });
-      // Force refetch of calendar data
-      queryClient.refetchQueries({ queryKey: calendarKeys.all });
+      // Use aggressive cache refresh utility
+      forceRefreshCalendarData(queryClient);
       
       toast({
         title: "Exercise Moved",

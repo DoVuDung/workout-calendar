@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useToast } from '@/hooks/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
+import { forceRefreshCalendarData } from '@/utils/cacheUtils';
 
 export default function Home() {
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
@@ -17,6 +19,7 @@ export default function Home() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   // Use React Query hooks
+  const queryClient = useQueryClient();
   const { data: calendarData, isLoading, error, refetch } = useCalendarData(currentDate);
   const updateCalendarMutation = useUpdateCalendarData();
   const createWorkoutMutation = useCreateWorkout();
@@ -106,8 +109,8 @@ export default function Home() {
         toDayId: targetDayId,
       }, {
         onSuccess: () => {
-          // Refetch calendar data to get updated state
-          refetch();
+          // Use aggressive cache refresh utility
+          forceRefreshCalendarData(queryClient);
         },
         onError: (error) => {
           toast({
@@ -136,8 +139,8 @@ export default function Home() {
         targetIndex: overIndex,
       }, {
         onSuccess: () => {
-          // Refetch calendar data to get updated state
-          refetch();
+          // Use aggressive cache refresh utility
+          forceRefreshCalendarData(queryClient);
         },
       });
     }
