@@ -28,23 +28,6 @@
           "duration": 45,
           "difficulty": "beginner",
           "color": "#5A57CB"
-        },
-        {
-          "id": "workout-1760055169583-2",
-          "name": "Evening Stretch",
-          "exercises": [
-            {
-              "id": "exercise-1760055169583-3",
-              "name": "Yoga Flow",
-              "sets": 1,
-              "weight": 0,
-              "reps": 20,
-              "type": "flexibility"
-            }
-          ],
-          "duration": 30,
-          "difficulty": "beginner",
-          "color": "#5A57CB"
         }
       ]
     },
@@ -83,6 +66,23 @@
           ],
           "duration": 75,
           "difficulty": "intermediate",
+          "color": "#5A57CB"
+        },
+        {
+          "id": "workout-1760055169583-2",
+          "name": "Evening Stretch",
+          "exercises": [
+            {
+              "id": "exercise-1760055169583-3",
+              "name": "Yoga Flow",
+              "sets": 1,
+              "weight": 0,
+              "reps": 20,
+              "type": "flexibility"
+            }
+          ],
+          "duration": 30,
+          "difficulty": "beginner",
           "color": "#5A57CB"
         }
       ]

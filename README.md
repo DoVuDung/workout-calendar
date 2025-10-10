@@ -72,6 +72,7 @@ This project includes comprehensive documentation to help you understand and wor
 - **[API_SETUP.md](./API_SETUP.md)** - JSON Server setup and API integration guide
 - **[MODULAR_ARCHITECTURE.md](./MODULAR_ARCHITECTURE.md)** - Modular architecture documentation and component structure
 - **[DOCKER.md](./DOCKER.md)** - Docker setup and deployment instructions
+- **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** - Environment configuration for local development and Vercel production
 - **[test-execution-guide.md](./test-execution-guide.md)** - Comprehensive testing guide with test scenarios and execution instructions
 
 ## Build
@@ -120,3 +121,19 @@ npm run dev
 ```
 
 The app will automatically detect the environment and use the appropriate API endpoint.
+
+### Environment Detection
+
+The application automatically adapts to different environments:
+
+- **Local Development**: Uses JSON server (`localhost:3002`) with file system storage
+- **Vercel Production**: Uses Next.js API routes (`/api`) with in-memory storage
+
+Check your current environment:
+```bash
+# Local
+curl http://localhost:3000/api/environment
+
+# Vercel
+curl https://your-app.vercel.app/api/environment
+```

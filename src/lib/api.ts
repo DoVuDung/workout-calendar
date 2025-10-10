@@ -1,9 +1,9 @@
 import { Day, Workout, Exercise } from '@/types';
 
-// Use Next.js API routes in production (Vercel), JSON server in development
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '/api' 
-  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002');
+// Use Next.js API routes for all operations (both development and production)
+// JSON server is only used for initial data loading in development
+const API_BASE_URL = '/api';
+const JSON_SERVER_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 
 class ApiClient {
   private baseUrl: string;
