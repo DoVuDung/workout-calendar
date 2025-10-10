@@ -148,66 +148,25 @@ class ApiClient {
   }
 
   async moveWorkout(workoutId: string, fromDayDate: string, toDayDate: string): Promise<void> {
-    const fromDay = await this.getDay(fromDayDate);
-    if (!fromDay) {
-      throw new Error('Source day not found');
-    }
-
-    const workout = fromDay.workouts.find(w => w.id === workoutId);
-    if (!workout) {
-      throw new Error('Workout not found');
-    }
-
-    // Get or create target day
-    let toDay = await this.getDay(toDayDate);
-    if (!toDay) {
-      // Create new day if it doesn't exist
-      toDay = {
-        date: toDayDate,
-        workouts: [],
-      };
-    }
-
-    // Remove from source day
-    const updatedFromDay = {
-      ...fromDay,
-      workouts: fromDay.workouts.filter(w => w.id !== workoutId),
-    };
-
-    // Add to target day
-    const updatedToDay = {
-      ...toDay,
-      workouts: [...toDay.workouts, workout],
-    };
-
-    await Promise.all([
-      this.updateDay(updatedFromDay),
-      this.updateDay(updatedToDay),
-    ]);
+    await this.request('/workouts/move', {
+      method: 'POST',
+      body: JSON.stringify({
+        workoutId,
+        fromDayDate,
+        toDayDate,
+      }),
+    });
   }
 
   async reorderWorkout(dayDate: string, workoutId: string, targetIndex: number): Promise<void> {
-    const day = await this.getDay(dayDate);
-    if (!day) {
-      throw new Error('Day not found');
-    }
-
-    const workoutIndex = day.workouts.findIndex(w => w.id === workoutId);
-    if (workoutIndex === -1) {
-      throw new Error('Workout not found');
-    }
-
-    // Reorder workouts within the day
-    const newWorkouts = [...day.workouts];
-    const [movedWorkout] = newWorkouts.splice(workoutIndex, 1);
-    newWorkouts.splice(targetIndex, 0, movedWorkout);
-
-    const updatedDay = {
-      ...day,
-      workouts: newWorkouts,
-    };
-
-    await this.updateDay(updatedDay);
+    await this.request('/workouts/reorder', {
+      method: 'POST',
+      body: JSON.stringify({
+        dayDate,
+        workoutId,
+        targetIndex,
+      }),
+    });
   }
 
   // Exercises API
@@ -276,31 +235,15 @@ class ApiClient {
   }
 
   async moveExercise(dayDate: string, workoutId: string, exerciseId: string, targetIndex: number): Promise<void> {
-    const day = await this.getDay(dayDate);
-    if (!day) {
-      throw new Error(`Day ${dayDate} not found`);
-    }
-
-    const workout = day.workouts.find(w => w.id === workoutId);
-    if (!workout) {
-      throw new Error(`Workout ${workoutId} not found`);
-    }
-
-    const exerciseIndex = workout.exercises.findIndex(ex => ex.id === exerciseId);
-    if (exerciseIndex === -1) {
-      throw new Error(`Exercise ${exerciseId} not found`);
-    }
-
-    const newExercises = [...workout.exercises];
-    const [movedExercise] = newExercises.splice(exerciseIndex, 1);
-    newExercises.splice(targetIndex, 0, movedExercise);
-
-    const updatedWorkout = {
-      ...workout,
-      exercises: newExercises,
-    };
-
-    await this.updateWorkout(dayDate, updatedWorkout);
+    await this.request('/exercises/move', {
+      method: 'POST',
+      body: JSON.stringify({
+        dayDate,
+        workoutId,
+        exerciseId,
+        targetIndex,
+      }),
+    });
   }
 }
 
