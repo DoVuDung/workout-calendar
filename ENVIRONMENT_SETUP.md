@@ -41,15 +41,17 @@ git push origin main
 ### How it works:
 - **API**: Uses Next.js API routes (`/api/*`)
 - **Storage**: In-memory storage (session-based)
-- **Data Persistence**: Session-based (resets after inactivity)
+- **Data Persistence**: ⚠️ **TEMPORARY** - Data resets when serverless functions restart
 - **Environment**: `NODE_ENV=production`, `VERCEL=1`
+- **Limitation**: Vercel's file system is read-only, so `db.json` cannot be modified
 
 ### Features:
-- Full CRUD operations
-- Drag & drop functionality
+- Full CRUD operations (temporary)
+- Drag & drop functionality (temporary)
 - Data resets when function instances recycle
 - Optimized for serverless
 - No external dependencies
+- **Demo Mode**: Shows functionality but data doesn't persist
 
 ## Environment Detection
 

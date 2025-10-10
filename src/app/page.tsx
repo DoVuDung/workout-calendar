@@ -10,6 +10,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { forceRefreshCalendarData } from '@/utils/cacheUtils';
+import { StorageWarning } from '@/components/StorageWarning';
 
 export default function Home() {
   const [selectedWorkout, setSelectedWorkout] = useState<Workout | null>(null);
@@ -352,6 +353,7 @@ export default function Home() {
         </header>
 
         <main className="w-full px-4 sm:px-6 lg:px-8 py-8">
+          <StorageWarning />
           <CalendarView
             days={calendarData}
             onWorkoutClick={handleWorkoutClick}
