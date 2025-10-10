@@ -61,6 +61,8 @@ export function useMoveWorkout() {
       queryClient.invalidateQueries({ queryKey: workoutKeys.all });
       // Also invalidate calendar data to sync with day views
       queryClient.invalidateQueries({ queryKey: calendarKeys.all });
+      // Force refetch of calendar data
+      queryClient.refetchQueries({ queryKey: calendarKeys.all });
       
       toast({
         title: "Workout Moved",
@@ -101,6 +103,8 @@ export function useReorderWorkout() {
       queryClient.invalidateQueries({ queryKey: workoutKeys.all });
       // Also invalidate calendar data to sync with day views
       queryClient.invalidateQueries({ queryKey: calendarKeys.all });
+      // Force refetch of calendar data
+      queryClient.refetchQueries({ queryKey: calendarKeys.all });
       
       toast({
         title: "Workout Reordered",
@@ -143,6 +147,8 @@ export function useMoveExercise() {
       queryClient.invalidateQueries({ queryKey: workoutKeys.all });
       // Also invalidate calendar data to sync with day views
       queryClient.invalidateQueries({ queryKey: calendarKeys.all });
+      // Force refetch of calendar data
+      queryClient.refetchQueries({ queryKey: calendarKeys.all });
       
       toast({
         title: "Exercise Moved",

@@ -147,13 +147,13 @@ class ApiClient {
     await this.updateDay(updatedDay);
   }
 
-  async moveWorkout(workoutId: string, fromDayDate: string, toDayDate: string): Promise<void> {
+  async moveWorkout(workoutId: string, fromDayId: string, toDayId: string): Promise<void> {
     await this.request('/workouts/move', {
       method: 'POST',
       body: JSON.stringify({
         workoutId,
-        fromDayDate,
-        toDayDate,
+        fromDayDate: fromDayId,
+        toDayDate: toDayId,
       }),
     });
   }
